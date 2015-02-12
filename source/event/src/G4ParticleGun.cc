@@ -132,6 +132,7 @@ void G4ParticleGun::SetParticleDefinition
 void G4ParticleGun::SetParticleEnergy(G4double aKineticEnergy)
 {
   particle_energy = aKineticEnergy;
+if(0)
   if(particle_momentum>0.0){
     if(particle_definition){
       G4cout << "G4ParticleGun::" << particle_definition->GetParticleName()
@@ -149,6 +150,7 @@ void G4ParticleGun::SetParticleEnergy(G4double aKineticEnergy)
 
 void G4ParticleGun::SetParticleMomentum(G4double aMomentum)
 {
+if(0)
   if(particle_energy>0.0){
     if(particle_definition){
       G4cout << "G4ParticleGun::" << particle_definition->GetParticleName()
@@ -179,6 +181,7 @@ void G4ParticleGun::SetParticleMomentum(G4double aMomentum)
  
 void G4ParticleGun::SetParticleMomentum(G4ParticleMomentum aMomentum)
 {
+if(0)
   if(particle_energy>0.0){
     if(particle_definition){
       G4cout << "G4ParticleGun::" << particle_definition->GetParticleName()

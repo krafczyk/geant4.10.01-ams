@@ -85,10 +85,12 @@ G4VPhysicalVolume::G4VPhysicalVolume( G4RotationMatrix *pRot,
                                 const G4ThreeVector &tlate,
                                 const G4String& pName,
                                       G4LogicalVolume* pLogical,
-                                      G4VPhysicalVolume* )
+                                      G4VPhysicalVolume* pMother )
   : flogical(pLogical),
     fname(pName), flmother(0)
 {
+   SetMother(pMother);
+
   instanceID = subInstanceManager.CreateSubInstance();
 
   this->SetRotation( pRot );       // G4MT_rot = pRot;

@@ -49,7 +49,7 @@ class G4XTRTransparentRegRadModel : public G4VXTRenergyLoss
 {
 public:
 
-  G4XTRTransparentRegRadModel (G4LogicalVolume *anEnvelope,G4Material*,G4Material*,
+  G4XTRTransparentRegRadModel (G4Region *anEnvelope,G4Material*,G4Material*,
                         G4double,G4double,G4int,
                         const G4String & processName = "XTRTransparentRegRadModel");
   ~G4XTRTransparentRegRadModel ();

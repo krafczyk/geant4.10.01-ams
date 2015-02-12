@@ -119,6 +119,9 @@ public:
   // access to the list of hadronic interactions
   std::vector<G4HadronicInteraction*>& GetHadronicInteractionList()
   { return theEnergyRangeManager.GetHadronicInteractionList(); }
+  inline G4EnergyRangeManager *GetManagerPointer()
+  { return &theEnergyRangeManager; }
+
           
   // get inverse cross section per volume
   G4double GetMeanFreePath(const G4Track &aTrack, G4double, 
@@ -151,6 +154,10 @@ protected:
   { return &targetNucleus; }
   
 public:
+  void BiasCrossSectionByFactor2(G4double aScale){
+    aScaleFactor=aScale;
+ }
+
 
   void BiasCrossSectionByFactor(G4double aScale);
 
@@ -216,7 +223,7 @@ protected:
 
   G4int epReportLevel;
 
-private:
+public:
     
   G4EnergyRangeManager theEnergyRangeManager;
     

@@ -37,7 +37,7 @@
 #include "G4ios.hh"
 #include "G4String.hh"
 #include "G4StateManager.hh"
-
+#include "ams_g4exception.h"
 void G4Exception(const char* originOfException,
                  const char* exceptionCode,
                              G4ExceptionSeverity severity,
@@ -50,6 +50,21 @@ void G4Exception(const char* originOfException,
   {
     toBeAborted = exceptionHandler
      ->Notify(originOfException,exceptionCode,severity,description);
+    switch(severity)
+    {
+     case FatalException:
+      break;
+     case FatalErrorInArgument:
+      break;
+     case RunMustBeAborted:
+     case EventMustBeAborted:
+        toBeAborted = true;
+      break;
+     default:
+      break;
+    }
+
+
   }
   else
   {
@@ -81,8 +96,9 @@ void G4Exception(const char* originOfException,
              << ee_banner << G4endl;
       break;
      case EventMustBeAborted:
+        toBeAborted = true;
       G4cerr << es_banner << message.str() << "*** Event Must Be Aborted ***"
-             << ee_banner << G4endl;
+             << ee_banner << " aborted "<<toBeAborted <<G4endl;
       break;
      default:
       G4cout << ws_banner << message.str()
@@ -94,11 +110,15 @@ void G4Exception(const char* originOfException,
   }
   if(toBeAborted)
   {
-   if(G4StateManager::GetStateManager()->SetNewState(G4State_Abort))
+    G4StateManager::GetStateManager()->SetNewState(G4State_Abort);
+   if(1 )
    {
-     G4cerr << G4endl << "*** G4Exception: Aborting execution ***" << G4endl;
-     abort();
-   }
+      G4cerr <<  "*** G4Exception: throwing exception ***" << G4endl;
+   int sev=0;
+   if(severity==RunMustBeAborted )sev=2; 
+     ams_g4exception myexc(sev);
+     throw myexc;
+ }
    else
    {
      G4cerr << G4endl << "*** G4Exception: Abortion suppressed ***"

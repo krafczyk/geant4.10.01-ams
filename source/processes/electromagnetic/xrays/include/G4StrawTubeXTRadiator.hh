@@ -54,7 +54,7 @@ class G4StrawTubeXTRadiator : public G4VXTRenergyLoss
 {
 public:
 
-  G4StrawTubeXTRadiator (G4LogicalVolume* anEnvelope, G4Material*, G4Material*,
+  G4StrawTubeXTRadiator (G4Region* anEnvelope, G4Material*, G4Material*,
                          G4double,G4double,G4Material*,G4bool unishut = false,
                          const G4String & processName = "StrawTubeXTRadiator");
   virtual ~G4StrawTubeXTRadiator ();

@@ -75,7 +75,7 @@ class G4VXTRenergyLoss : public G4VDiscreteProcess  // G4VContinuousProcess
 {
 public:
 
-  G4VXTRenergyLoss (G4LogicalVolume *anEnvelope,G4Material*,G4Material*,
+  G4VXTRenergyLoss (G4Region *anEnvelope,G4Material*,G4Material*,
                     G4double,G4double,G4int,
                     const G4String & processName = "XTRenergyLoss",
                     G4ProcessType type = fElectromagnetic);
@@ -97,6 +97,7 @@ public:
 
   void BuildPhysicsTable(const G4ParticleDefinition&);
   void BuildEnergyTable() ;
+  G4bool GetEnergyTable();
   void BuildAngleForEnergyBank() ;
 
   void BuildTable(){} ;
@@ -182,9 +183,10 @@ protected:
   G4double* fGammaCutInKineticEnergy ; // TR photon cut in energy array
 
   G4double         fGammaTkinCut ;     // Tkin cut of TR photon in current mat.
-  G4LogicalVolume* fEnvelope ;
+  G4Region* fEnvelope ;
   G4PhysicsTable*  fAngleDistrTable ;
   G4PhysicsTable*  fEnergyDistrTable ;
+  G4String energyTableFileName;
 
   G4PhysicsLogVector* fProtonEnergyVector ;
   G4PhysicsLogVector* fXTREnergyVector ;
@@ -231,14 +233,10 @@ protected:
 
   G4ParticleChange fParticleChange;
 
+  // G4double fEnergyForAngle;
+  // G4PhysicsLinearVector* fAngleVector;
   G4PhysicsTable*                    fAngleForEnergyTable;
   std::vector<G4PhysicsTable*>       fAngleBank;
-
-private:
-
-  // copy constructor and hide assignment operator
-  G4VXTRenergyLoss(G4VXTRenergyLoss &);
-  G4VXTRenergyLoss & operator=(const G4VXTRenergyLoss &right);
 
 };
 

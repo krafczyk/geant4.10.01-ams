@@ -36,7 +36,7 @@
 //
 
 #include "G4VXTRenergyLoss.hh"
-
+#include "G4EmProcessSubType.hh"
 #include "G4Timer.hh"
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
@@ -46,6 +46,7 @@
 #include "G4VDiscreteProcess.hh"
 #include "G4VParticleChange.hh"
 #include "G4VSolid.hh"
+#include "G4UIcommand.hh"
 
 #include "G4RotationMatrix.hh"
 #include "G4ThreeVector.hh"
@@ -60,7 +61,7 @@
 //
 // Constructor, destructor
 
-G4VXTRenergyLoss::G4VXTRenergyLoss(G4LogicalVolume *anEnvelope,
+G4VXTRenergyLoss::G4VXTRenergyLoss(G4Region *anEnvelope,
 				   G4Material* foilMat,G4Material* gasMat,
 				   G4double a, G4double b,
 				   G4int n,const G4String& processName,
@@ -76,7 +77,8 @@ G4VXTRenergyLoss::G4VXTRenergyLoss(G4LogicalVolume *anEnvelope,
 {
   verboseLevel = 1;
 
-  fPtrGamma = 0;
+SetProcessSubType(fTransitionRadiation);
+
   fMinEnergyTR = fMaxEnergyTR = fMaxThetaTR = fGamma = fEnergy = fVarAngle 
     = fLambda = fTotalDist = fPlateThick = fGasThick = fAlphaPlate = fAlphaGas = 0.0;
 
@@ -92,6 +94,7 @@ G4VXTRenergyLoss::G4VXTRenergyLoss(G4LogicalVolume *anEnvelope,
   fTotBin         = 50;
 
   // Proton energy vector initialization
+
   fProtonEnergyVector = new G4PhysicsLogVector(fMinProtonTkin,
 					       fMaxProtonTkin,
 					       fTotBin  );
@@ -168,18 +171,9 @@ G4VXTRenergyLoss::~G4VXTRenergyLoss()
   if(fEnvelope) delete fEnvelope;
   delete fProtonEnergyVector;
   delete fXTREnergyVector;
-  if(fEnergyDistrTable) { 
-    fEnergyDistrTable->clearAndDestroy(); 
-    delete fEnergyDistrTable;
-  }
-  if(fAngleRadDistr) {
-    fAngleDistrTable->clearAndDestroy();
-    delete fAngleDistrTable;
-  }
-  if(fAngleForEnergyTable) {
-    fAngleForEnergyTable->clearAndDestroy();
-    delete fAngleForEnergyTable;
-  }
+  delete fEnergyDistrTable;
+  if(fAngleRadDistr) delete fAngleDistrTable;
+  delete fAngleForEnergyTable;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -207,7 +201,7 @@ G4double G4VXTRenergyLoss::GetMeanFreePath(const G4Track& aTrack,
 
   *condition = NotForced;
   
-  if( aTrack.GetVolume()->GetLogicalVolume() != fEnvelope ) lambda = DBL_MAX;
+  if( aTrack.GetVolume()->GetLogicalVolume()->GetRegion() != fEnvelope ) lambda = DBL_MAX;
   else
   {
     const G4DynamicParticle* aParticle = aTrack.GetDynamicParticle();
@@ -276,6 +270,7 @@ void G4VXTRenergyLoss::BuildPhysicsTable(const G4ParticleDefinition& pd)
     G4Exception("G4VXTRenergyLoss::BuildPhysicsTable", "Notification", JustWarning,
                  "XTR initialisation for neutral particle ?!" );   
   }
+
   BuildEnergyTable();
 
   if (fAngleRadDistr) 
@@ -289,6 +284,40 @@ void G4VXTRenergyLoss::BuildPhysicsTable(const G4ParticleDefinition& pd)
   }
 }
 
+//////////////////////////////////////////////////////////////////////////
+//
+// Try to read energy tables from an existing file
+
+G4bool G4VXTRenergyLoss::GetEnergyTable()
+{
+  energyTableFileName = "table_GammaXTRadiator_" + G4UIcommand::ConvertToString(fAlphaPlate) + "_" 
+    + G4UIcommand::ConvertToString(fAlphaGas) + "_" + G4UIcommand::ConvertToString(fPlateThick / mm) + "_" 
+    + G4UIcommand::ConvertToString(fGasThick / mm) + "_" + G4UIcommand::ConvertToString(fPlateNumber) + ".txt";
+
+  G4String file = "";
+  G4bool read = false;
+  if (char* amsDataDirectory = getenv("AMSDataDir")) {
+    file = G4String(amsDataDirectory) + "/v5.00/" + energyTableFileName;
+    FILE* pFile = fopen(file.c_str(), "r");
+    if (pFile) {
+      read = fEnergyDistrTable->RetrievePhysicsTable(file, true);
+      fclose(pFile);
+    }
+  }
+
+  if (!read) {
+    if (char* workDirectory = getenv("G4WORKDIR")) {
+      file = G4String(workDirectory) + "/" + energyTableFileName;
+      FILE* pFile = fopen(file.c_str(), "r");
+      if (pFile) {
+	read = fEnergyDistrTable->RetrievePhysicsTable(file, true);
+	fclose(pFile);
+      }
+    }
+  }
+
+  return read;
+}
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -302,6 +331,8 @@ void G4VXTRenergyLoss::BuildEnergyTable()
 
   fEnergyDistrTable = new G4PhysicsTable(fTotBin);
   if(fAngleRadDistr) fAngleDistrTable = new G4PhysicsTable(fTotBin);
+
+  if(GetEnergyTable()) return;
 
   fGammaTkinCut = 0.0;
   
@@ -378,6 +409,20 @@ void G4VXTRenergyLoss::BuildEnergyTable()
     G4cout<<"total time for build X-ray TR energy loss tables = "
 	  <<timer.GetUserElapsed()<<" s"<<G4endl;
   }
+
+  if (char* workDirectory = getenv("G4WORKDIR")) {
+    G4String file = G4String(workDirectory) + "/" + energyTableFileName;
+    G4cout << "G4VXTRenergyLoss::BuildEnergyTable(): Writing energy table file \"" << file << "\" ..." << G4endl;
+
+    G4bool writeSuccess = fEnergyDistrTable->StorePhysicsTable(file, true);
+
+    if(!writeSuccess)
+      G4cout << "G4VXTRenergyLoss::BuildEnergyTable(): Error writing file!" << G4endl;
+
+  } else {
+    G4cout << "G4VXTRenergyLoss::BuildEnergyTable(): Cannot store energy table. Environmental variable $G4WORKDIR not set!" << G4endl;
+  }
+
   fGamma = 0.;
   return;
 }
@@ -469,7 +514,7 @@ void G4VXTRenergyLoss::BuildAngleForEnergyBank()
 	  <<timer.GetUserElapsed()<<" s"<<G4endl;
   }
   fGamma = 0.;
-  delete energyVector;
+  return;
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -738,7 +783,7 @@ G4VParticleChange* G4VXTRenergyLoss::PostStepDoIt( const G4Track& aTrack,
     G4cout<<"name of current material =  "
           <<aTrack.GetVolume()->GetLogicalVolume()->GetMaterial()->GetName()<<G4endl;
   }
-  if( aTrack.GetVolume()->GetLogicalVolume() != fEnvelope ) 
+  if( aTrack.GetVolume()->GetLogicalVolume()->GetRegion() != fEnvelope ) 
   {
     if(verboseLevel > 0)
     {
@@ -832,7 +877,7 @@ G4VParticleChange* G4VXTRenergyLoss::PostStepDoIt( const G4Track& aTrack,
         G4ThreeVector localP = transform.TransformPoint(position);
         G4ThreeVector localV = transform.TransformAxis(directionTR);
 
-        G4double distance = fEnvelope->GetSolid()->DistanceToOut(localP, localV);
+	G4double distance = aTrack.GetVolume()->GetLogicalVolume()->GetSolid()->DistanceToOut(localP, localV);
         if(verboseLevel > 1)
         {
           G4cout<<"distance to exit = "<<distance/mm<<" mm"<<G4endl;

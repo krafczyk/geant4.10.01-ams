@@ -320,16 +320,20 @@ G4OpBoundaryProcess::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
 	  if(enteredDaughter){
 	    Surface = 
               G4LogicalSkinSurface::GetSurface(thePostPV->GetLogicalVolume());
+ if(Surface && ((G4LogicalSkinSurface*)Surface)->OutOnly())Surface=0;
 	    if(Surface == NULL)
 	      Surface =
-                G4LogicalSkinSurface::GetSurface(thePrePV->GetLogicalVolume());
+        G4LogicalSkinSurface::GetSurface(thePrePV->GetLogicalVolume());
+        if(Surface && ((G4LogicalSkinSurface*)Surface)->OutOnly())Surface=0;
+
 	  }
 	  else {
 	    Surface =
               G4LogicalSkinSurface::GetSurface(thePrePV->GetLogicalVolume());
+              if(Surface &&  ((G4LogicalSkinSurface*)Surface)->InOnly())Surface=NULL;
 	    if(Surface == NULL)
 	      Surface =
-                G4LogicalSkinSurface::GetSurface(thePostPV->GetLogicalVolume());
+                G4LogicalSkinSurface::GetSurface(thePostPV->GetLogicalVolume());               if(Surface && ((G4LogicalSkinSurface*)Surface)->OutOnly())Surface=0;
 	  }
 	}
 

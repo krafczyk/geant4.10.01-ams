@@ -21,6 +21,7 @@ CPPFLAGS += \
             -I$(G4BASE)/geometry/navigation/include \
 	    -I$(G4BASE)/geometry/magneticfield/include \
             -I$(G4BASE)/track/include \
+            -I$(G4BASE)/intercoms/include \
             -I$(G4BASE)/processes/management/include \
             -I$(G4BASE)/processes/cuts/include \
             -I$(G4BASE)/processes/electromagnetic/standard/include \

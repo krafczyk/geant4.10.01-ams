@@ -3,7 +3,7 @@
 #
 ifeq ($(G4SYSTEM),Linux-icc)
   CXX       := icc
-  CXXFLAGS  := -ansi -fp-model precise -no-gcc -w1
+  CXXFLAGS  := -ansi -no-gcc -w1
   ifdef G4USE_STD11
     CXXFLAGS  += -std=c++11
   endif
@@ -11,14 +11,14 @@ ifeq ($(G4SYSTEM),Linux-icc)
     CXXFLAGS += -ftls-model=initial-exec -pthread
   endif
   ifdef G4OPTIMISE
-    CXXFLAGS  += -O2
-    FCFLAGS   := -O2
-    CCFLAGS   := -O2
+    CXXFLAGS  += -O2 -axsse4.2,ssse3,AVX -fp-model source -fast-transcendentals
+    FCFLAGS   := -O2 -axsse4.2,ssse3,AVX -fp-model source -fast-transcendentals
+    CCFLAGS   := -O2 -axsse4.2,ssse3,AVX -fp-model source -fast-transcendentals
   else
     ifdef G4DEBUG
-      CXXFLAGS  += -g
-      FCFLAGS   := -g
-      CCFLAGS   := -g
+      CXXFLAGS  += -g -fp-model precise
+      FCFLAGS   := -g  -fp-model precise
+      CCFLAGS   := -g -fp-model precise
     endif
   endif
   ifdef G4PROFILE

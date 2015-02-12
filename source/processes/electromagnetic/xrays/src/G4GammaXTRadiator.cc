@@ -38,7 +38,7 @@
 //
 // Constructor, destructor
 
-G4GammaXTRadiator::G4GammaXTRadiator(G4LogicalVolume* anEnvelope, 
+G4GammaXTRadiator::G4GammaXTRadiator(G4Region* anEnvelope, 
 				     G4double alphaPlate,
 				     G4double alphaGas,
                                      G4Material* foilMat,G4Material* gasMat, 

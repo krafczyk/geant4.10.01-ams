@@ -79,7 +79,7 @@ class G4HadronPhysicsQGSP_BIC : public G4VPhysicsConstructor
     virtual void ConstructParticle();
     virtual void ConstructProcess();
 
-  private:
+  public:
     void CreateModels();
 
     struct ThreadPrivate {

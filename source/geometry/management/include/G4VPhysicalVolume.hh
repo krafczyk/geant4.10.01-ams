@@ -148,6 +148,11 @@ class G4VPhysicalVolume
       // Return the current mother logical volume pointer.
     inline void SetMotherLogical(G4LogicalVolume *pMother);
       // Set the mother logical volume. Must not be called when geometry closed.
+  G4VPhysicalVolume * GetMother() const {return fMother;}
+  void SetMother(G4VPhysicalVolume *mother){fMother=mother;}
+private:
+  G4VPhysicalVolume *fMother;
+public:
 
     inline const G4String& GetName() const;
       // Return the volume's name.

@@ -259,7 +259,7 @@ void G4Polyhedra::Create( G4double phiStart,
   if ( (phiTotal <= 0) || (phiTotal > twopi*(1-DBL_EPSILON)) )
   {
     phiIsOpen = false;
-    endPhi = phiStart+twopi;
+    endPhi = startPhi+twopi;
   }
   else
   {
@@ -268,7 +268,7 @@ void G4Polyhedra::Create( G4double phiStart,
     //
     // Convert phi into our convention
     //
-    endPhi = phiStart+phiTotal;
+    endPhi = startPhi+phiTotal;
     while( endPhi < startPhi ) endPhi += twopi;
   }
   

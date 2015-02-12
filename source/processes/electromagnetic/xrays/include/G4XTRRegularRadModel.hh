@@ -50,7 +50,7 @@ class G4XTRRegularRadModel : public G4VXTRenergyLoss
 {
 public:
 
-  G4XTRRegularRadModel (G4LogicalVolume *anEnvelope,G4Material*,G4Material*,
+  G4XTRRegularRadModel (G4Region *anEnvelope,G4Material*,G4Material*,
                         G4double,G4double,G4int,
                         const G4String & processName = "XTRegularModel");
   virtual ~G4XTRRegularRadModel ();

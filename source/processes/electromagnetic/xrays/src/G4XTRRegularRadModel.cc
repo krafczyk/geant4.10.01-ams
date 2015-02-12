@@ -38,7 +38,7 @@ using namespace std;
 //
 // Constructor, destructor
 
-G4XTRRegularRadModel::G4XTRRegularRadModel(G4LogicalVolume *anEnvelope,
+G4XTRRegularRadModel::G4XTRRegularRadModel(G4Region *anEnvelope,
                                          G4Material* foilMat,G4Material* gasMat,
                                          G4double a, G4double b, G4int n,
                                          const G4String& processName) :

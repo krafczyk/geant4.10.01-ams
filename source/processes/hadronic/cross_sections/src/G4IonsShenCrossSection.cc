@@ -42,7 +42,7 @@
 
 G4IonsShenCrossSection::G4IonsShenCrossSection()
   : G4VCrossSectionDataSet("IonsShen"),
-    upperLimit( 10*GeV ),
+    upperLimit( 100*TeV ),
 //  lowerLimit( 10*MeV ),
     r0 ( 1.1 )
 {}

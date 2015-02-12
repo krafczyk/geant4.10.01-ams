@@ -57,7 +57,7 @@ class G4XTRGammaRadModel : public G4VXTRenergyLoss
 {
 public:
 
-  G4XTRGammaRadModel (G4LogicalVolume *anEnvelope,
+  G4XTRGammaRadModel (G4Region *anEnvelope,
 		      G4double,G4double,
 		      G4Material*,G4Material*,
 		      G4double,G4double,G4int,

@@ -104,7 +104,7 @@ void G4VAtomDeexcitation::InitialiseAtomicDeexcitation()
   activeZ.resize(93, false);
 
   // check if deexcitation is active for the given run
-  if( !isActive ) { return; }
+ // if( !isActive ) { return; }
 
   // Define list of regions
   size_t nRegions = deRegions.size();

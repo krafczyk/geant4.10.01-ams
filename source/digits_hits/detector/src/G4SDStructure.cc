@@ -46,14 +46,14 @@ G4SDStructure::G4SDStructure(G4String aPath):verboseLevel(0)
 }
 
 G4SDStructure::~G4SDStructure()
-{
+{/*
   size_t nTree = structure.size();
   for(size_t iTree=0;iTree<nTree;iTree++)
   { delete structure[iTree]; }
   size_t nDet = detector.size();
   for(size_t iDet=0;iDet<nDet;iDet++)
   { delete detector[iDet]; }
-}
+*/}
 
 G4int G4SDStructure::operator==(const G4SDStructure &right) const
 {

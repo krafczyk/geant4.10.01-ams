@@ -39,7 +39,7 @@ using namespace std;
 //
 // Constructor, destructor
 
-G4XTRGammaRadModel::G4XTRGammaRadModel(G4LogicalVolume* anEnvelope,
+G4XTRGammaRadModel::G4XTRGammaRadModel(G4Region* anEnvelope,
                                      G4double alphaPlate,
                                      G4double alphaGas,
                                      G4Material* foilMat,G4Material* gasMat,

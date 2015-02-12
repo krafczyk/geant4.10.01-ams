@@ -72,6 +72,13 @@ class G4LogicalSkinSurface : public G4LogicalSurface
     static size_t GetNumberOfSkinSurfaces();
     static void DumpInfo(); // const 
       // To handle with the table of surfaces.
+  // Added by CD following VC release notes
+  bool InOnly(){return _inout==1;}
+  bool OutOnly(){return _inout==2;}
+  void SetInOnly(){_inout=1;}
+  void SetOutOnly(){_inout=2;}
+private:
+  int _inout;  // 0 undefined 1 in only 2 out only
 
     G4int operator==(const G4LogicalSkinSurface &right) const;
     G4int operator!=(const G4LogicalSkinSurface &right) const;

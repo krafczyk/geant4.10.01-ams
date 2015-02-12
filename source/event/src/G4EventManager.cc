@@ -34,6 +34,9 @@
 #include "G4EvManMessenger.hh"
 #include "G4Event.hh"
 #include "G4UserEventAction.hh"
+
+#include "ams_g4exception.h"
+
 #include "G4UserStackingAction.hh"
 #include "G4SDManager.hh"
 #include "G4StateManager.hh"
@@ -182,7 +185,14 @@ void G4EventManager::DoProcessing(G4Event* anEvent)
 #endif
 
     tracking = true;
+try{
+
     trackManager->ProcessOneTrack( track );
+}
+catch (ams_g4exception &a){
+ if (a.Severity>1)throw;
+}
+
     istop = track->GetTrackStatus();
     tracking = false;
 

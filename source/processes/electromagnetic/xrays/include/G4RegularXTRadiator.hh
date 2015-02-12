@@ -51,7 +51,7 @@ class G4RegularXTRadiator : public G4VXTRenergyLoss
 {
 public:
 
-  G4RegularXTRadiator (G4LogicalVolume *anEnvelope,G4Material*,G4Material*,
+  G4RegularXTRadiator (G4Region *anEnvelope,G4Material*,G4Material*,
                         G4double,G4double,G4int,
                         const G4String & processName = "XTRegularRadiator");
   ~G4RegularXTRadiator ();

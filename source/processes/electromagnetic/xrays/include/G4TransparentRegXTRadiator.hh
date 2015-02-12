@@ -52,7 +52,7 @@ class G4TransparentRegXTRadiator : public G4VXTRenergyLoss
 {
 public:
 
-  G4TransparentRegXTRadiator (G4LogicalVolume *anEnvelope,G4Material*,G4Material*,
+  G4TransparentRegXTRadiator (G4Region *anEnvelope,G4Material*,G4Material*,
                         G4double,G4double,G4int,
                         const G4String & processName = "TransparentRegXTRadiator");
   ~G4TransparentRegXTRadiator ();

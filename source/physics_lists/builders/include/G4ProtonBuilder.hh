@@ -56,7 +56,7 @@ class G4ProtonBuilder
     void Build();
     void RegisterMe(G4VProtonBuilder * aB) {theModelCollections.push_back(aB);}
 
-  private:
+  public:
     G4ProtonInelasticProcess * theProtonInelastic;
     
     std::vector<G4VProtonBuilder *> theModelCollections;

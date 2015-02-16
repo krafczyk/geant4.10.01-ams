@@ -157,7 +157,7 @@ private:
   const G4double fRadiusConst;
  
   G4double fTotalXsc, fElasticXsc, fInelasticXsc, fProductionXsc, fDiffractionXsc;
-//  G4double fHadronNucleonXsc;
+  G4double fHadronNucleonXsc;
  
   const G4ParticleDefinition* theProton;
   const G4ParticleDefinition* theNeutron;
@@ -167,6 +167,8 @@ private:
   G4DynamicParticle cacheDP;
   G4DynamicParticle dProton;
   G4DynamicParticle dNeutron;
+  public:
+  void setScale(double fac){ fHadronNucleonXsc=fac;}
 };
 
 ////////////////////////////////////////////////////////////////

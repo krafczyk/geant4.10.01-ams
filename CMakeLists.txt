@@ -158,12 +158,12 @@ if(GEANT4_BUILD_EXAMPLES)
 endif()
 
 # - Install example code to datarootdir
-install(DIRECTORY examples
-  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/Geant4-${Geant4_VERSION}
-  COMPONENT Examples
-  PATTERN "CVS" EXCLUDE
-  PATTERN ".svn" EXCLUDE
-  )
+#install(DIRECTORY examples
+#  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/Geant4-${Geant4_VERSION}
+#  COMPONENT Examples
+#  PATTERN "CVS" EXCLUDE
+#  PATTERN ".svn" EXCLUDE
+#  )
 
 
 #-----------------------------------------------------------------------------

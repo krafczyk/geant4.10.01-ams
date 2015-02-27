@@ -54,7 +54,7 @@ class G4AntiBarionBuilder
     void Build();
     void RegisterMe(G4VAntiBarionBuilder * aB) {theModelCollections.push_back(aB);}
 
-  private:
+  public:
     G4AntiProtonInelasticProcess*   theAntiProtonInelastic;
     G4AntiNeutronInelasticProcess*  theAntiNeutronInelastic;
     G4AntiDeuteronInelasticProcess* theAntiDeuteronInelastic;

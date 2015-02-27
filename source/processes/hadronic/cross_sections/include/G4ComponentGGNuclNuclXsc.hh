@@ -167,8 +167,9 @@ private:
   G4DynamicParticle cacheDP;
   G4DynamicParticle dProton;
   G4DynamicParticle dNeutron;
-  public:
-  void setScale(double fac){ fHadronNucleonXsc=fac;}
+public:
+void setScale(double fac){ fHadronNucleonXsc=fac;}
+
 };
 
 ////////////////////////////////////////////////////////////////

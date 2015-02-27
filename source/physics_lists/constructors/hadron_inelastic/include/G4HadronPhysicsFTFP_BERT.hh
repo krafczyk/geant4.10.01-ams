@@ -74,7 +74,7 @@ class G4HadronPhysicsFTFP_BERT : public G4VPhysicsConstructor
     virtual void ConstructParticle();
     virtual void ConstructProcess();
 
-  private:
+  public:  // private->public, to allow for scaling cross-sections
     void CreateModels();
     G4bool QuasiElastic;
 

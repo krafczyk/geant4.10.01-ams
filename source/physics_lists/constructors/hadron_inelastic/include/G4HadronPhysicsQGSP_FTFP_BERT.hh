@@ -76,7 +76,7 @@ class G4HadronPhysicsQGSP_FTFP_BERT : public G4VPhysicsConstructor
 
     void SetQuasiElastic(G4bool value) {QuasiElastic = value;}; 
 
-  private:
+  public:  // private->public, to allow for scaling cross-sections
     void CreateModels();
 
     struct ThreadPrivate {

@@ -75,7 +75,7 @@ class G4HadronPhysicsFTFP_BERT_TRV : public G4VPhysicsConstructor
     virtual void ConstructParticle();
     virtual void ConstructProcess();
 
-  private:
+  public:  // private->public, to allow for scaling cross-sections
     void CreateModels();
 
     struct ThreadPrivate {

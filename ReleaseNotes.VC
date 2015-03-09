@@ -1,0 +1,43 @@
+G4LogicalSkinSurface.hh   Modified to include surface direction functions  ok
+
+G4VPhysicalVolume.hh Modified to allow setting and getting the mother volume ok
+G4VPhysicalVolume.CC  add SetMother in constructor  ok
+
+G4ParticleGun.cc          Modified to  allow changing of momentum, energy and particle properties without creating a new instance  ok
+
+G4OpBoundaryProcess.cc    proper handling of boundary procs ok
+
+G4Exception.cc throw an exception, instead of abort  ok
+./source/global/management/include/ams_g4exception.h   new file  ok
+G4IonsShenCrossSection.cc upperLimit ( 100 * TeV ),   ok
+./source/geometry/solids/specific/src/G4Polyhedra.cc bug fix  ok
+
+G4HadronicProcess.hh  A BiasCrossSectionByFactor2 to allow change of hadronic crs  + private->public + restore GetManagerPointer() ok
+G4ProtonBuilder.hh   C private->public    ok 
+G4HadronPhysicsQGSP_BIC.hh C private->public ok
+G4EventManager.cc   add try/catch around ProcessTrack ok
+source/geometry/solids/Boolean/src/G4SubtractionSolid.ccsource/geometry/solids/Boolean/src/G4SubtractionSolid.cc  C (dist?JustWarning:EventMustBeAborted) ok
+
+xrays  taken from 9.6.p03   
+patching file source/processes/electromagnetic/xrays/include/G4GammaXTRadiator.hh
+patching file source/processes/electromagnetic/xrays/include/G4RegularXTRadiator.hh
+patching file source/processes/electromagnetic/xrays/include/G4StrawTubeXTRadiator.hh
+patching file source/processes/electromagnetic/xrays/include/G4TransparentRegXTRadiator.hh
+patching file source/processes/electromagnetic/xrays/include/G4VXTRenergyLoss.hh
+patching file source/processes/electromagnetic/xrays/include/G4XTRGammaRadModel.hh
+patching file source/processes/electromagnetic/xrays/include/G4XTRRegularRadModel.hh
+patching file source/processes/electromagnetic/xrays/include/G4XTRTransparentRegRadModel.hh
+patching file source/processes/electromagnetic/xrays/src/G4GammaXTRadiator.cc
+patching file source/processes/electromagnetic/xrays/src/G4RegularXTRadiator.cc
+patching file source/processes/electromagnetic/xrays/src/G4StrawTubeXTRadiator.cc
+patching file source/processes/electromagnetic/xrays/src/G4TransparentRegXTRadiator.cc
+patching file source/processes/electromagnetic/xrays/src/G4VXTRenergyLoss.cc
+patching file source/processes/electromagnetic/xrays/src/G4XTRGammaRadModel.cc
+patching file source/processes/electromagnetic/xrays/src/G4XTRRegularRadModel.cc
+patching file source/processes/electromagnetic/xrays/src/G4XTRTransparentRegRadModel.cc
+
+ source/processes/electromagnetic/utils/src/G4VAtomDeexcitation.cc   comment out return ok 
+ source/processes/electromagnetic/lowenergy/src/G4UAtomicDeexcitation.cc  comment out return ok 
+G4SDStructure.C removing destructor
+G4ComponentGGNuclNuclXsc.hh   add possibility to scale xsection
+G4PhysicsVector.cc  ::Value  Protection against out of bound access ~

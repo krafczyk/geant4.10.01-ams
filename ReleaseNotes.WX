@@ -1,0 +1,8 @@
+1. In G4CrossSectionDataSetRegistry.C, G4CrossSectionDataSetRegistry::Clean() modifed, to avoid crash at the end of gbatch
+2. Charge private->public for the following class, in order to allow for cross section scaling
+G4HadronPhysicsQGSP_BERT
+G4HadronPhysicsQGSP_FTFP_BERT
+G4HadronPhysicsFTFP_BERT
+G4HadronPhysicsFTFP_BERT_TRV
+G4HadronPhysicsINCLXX
+G4HadronPhysicsNuBeam

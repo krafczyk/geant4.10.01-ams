@@ -507,10 +507,14 @@ G4double G4PhysicsVector::Value(G4double theEnergy, size_t& lastIdx) const
   G4double y;
   if(theEnergy <= edgeMin) {
     lastIdx = 0; 
-    y = dataVector[0]; 
+    y = dataVector.at(lastIdx); 
   } else if(theEnergy >= edgeMax) { 
     lastIdx = numberOfNodes-1; 
-    y = dataVector[lastIdx]; 
+    if(dataVector.size()<=lastIdx ){
+        G4cerr<<" datavectorsize "<<dataVector.size()<< " "<<lastIdx<<G4endl;
+        lastIdx=dataVector.size()?dataVector.size()-1:0;
+    }
+    y = dataVector.at(lastIdx); 
   } else {
     lastIdx = FindBin(theEnergy, lastIdx);
     y = Interpolation(lastIdx, theEnergy);

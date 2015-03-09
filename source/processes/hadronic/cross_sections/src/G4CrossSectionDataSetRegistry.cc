@@ -97,15 +97,13 @@ G4CrossSectionDataSetRegistry::~G4CrossSectionDataSetRegistry()
 
 void G4CrossSectionDataSetRegistry::Clean()
 {
-	return; // do nothing, by WXU, to avoid the crash at the exit of gbatch
   size_t n = xSections.size(); 
   if(n > 0) {
     for (size_t i=0; i<n; ++i) {
       if(xSections[i]) {
-			G4VCrossSectionDataSet* p = xSections[i];
-			std::cout << "--DEBUG-LOCAL---G4CrossSectionDataSetRegistry::Clean(): i=" << i <<", / " << n << ", p=" << p << ", name=" << p->GetName() << std::endl;
-			xSections[i] = 0;
-			delete p;
+	G4VCrossSectionDataSet* p = xSections[i];
+	xSections[i] = 0;
+	delete p;
       }
     }
     xSections.clear();

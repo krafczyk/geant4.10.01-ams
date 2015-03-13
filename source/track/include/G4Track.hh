@@ -113,7 +113,8 @@ public: // With description
   // track ID
    G4int GetTrackID() const;
    void SetTrackID(const G4int aValue);
-
+   static unsigned long long Size(int what=0);
+   static void Reset() ; 
    G4int GetParentID() const;
    void SetParentID(const G4int aValue);
 

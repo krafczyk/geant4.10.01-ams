@@ -91,6 +91,16 @@ G4Track::G4Track(G4DynamicParticle* apValueDynamicParticle,
 
 }
 
+unsigned long long G4Track::Size(int what ){
+    if (!aTrackAllocator) return 0; 
+    else if(what==0)return aTrackAllocator->GetAllocatedSize();
+    else return  aTrackAllocator->GetPageSize()* aTrackAllocator->GetNoPages();
+   }
+
+void G4Track::Reset(){
+if(aTrackAllocator)aTrackAllocator->ResetStorage();
+}
+
 //////////////////
 G4Track::G4Track()
 //////////////////

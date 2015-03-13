@@ -50,15 +50,14 @@
 class G4AllocatorPool
 {
   public:
-
+  static unsigned long long Threshold; 
     explicit G4AllocatorPool( unsigned int n=0 );
       // Create a pool of elements of size n
     ~G4AllocatorPool();
       // Destructor. Return storage to the free store
-
     inline void* Alloc();
       // Allocate one element
-    inline void  Free( void* b );
+     inline void  Free( void* b );
       // Return an element back to the pool
 
     inline unsigned int  Size() const;
@@ -72,7 +71,6 @@ class G4AllocatorPool
       // Accessor for default page size
     inline void GrowPageSize( unsigned int factor );
       // Increase default page size by a given factor
-
   private:
 
     G4AllocatorPool(const G4AllocatorPool& right);
@@ -88,16 +86,20 @@ class G4AllocatorPool
     {
       public:
         explicit G4PoolChunk(unsigned int sz)
-          : size(sz), mem(new char[size]), next(0) {;}
+          : size(sz), mem(new char[size]), next(0),used(0) {;}
         ~G4PoolChunk() { delete [] mem; }
         const unsigned int size;
         char* mem;
+        int used; 
         G4PoolChunk* next;
     };
 
     void Grow();
       // Make pool larger
-
+      //   
+      //
+     G4PoolChunk * GetChunk( G4PoolLink *p); 
+     unsigned long long CollectGarbage(); 
   private:
 
     const unsigned int esize;
@@ -105,6 +107,7 @@ class G4AllocatorPool
     G4PoolChunk* chunks;
     G4PoolLink* head;
     int nchunks;
+    int free;
 };
 
 // ------------------------------------------------------------
@@ -118,8 +121,11 @@ class G4AllocatorPool
 inline void*
 G4AllocatorPool::Alloc()
 {
-  if (head==0) { Grow(); }
+  if (head==0) { Grow(); free++; }
   G4PoolLink* p = head;  // return first element
+  G4PoolChunk*n=GetChunk(p);
+  if(n)n->used++;
+  if(n && n->used==1)free--;
   head = p->next;
   return p;
 }
@@ -128,13 +134,26 @@ G4AllocatorPool::Alloc()
 // Free
 // ************************************************************
 //
-inline void
-G4AllocatorPool::Free( void* b )
+#include <iostream>
+inline void G4AllocatorPool::Free( void* b )
 {
   G4PoolLink* p = static_cast<G4PoolLink*>(b);
   p->next = head;        // put b back as first element
   head = p;
+  G4PoolChunk *n=GetChunk(p);
+  if(n){
+    n->used--;
+    if(n->used==0)free++;
+   }
+   unsigned long long size=Size();
+  if(size>Threshold  && free>nchunks/2+1){
+   unsigned long long coll=CollectGarbage();
+   unsigned int mess=0;
+   const unsigned int gmess=1000;
+   if(mess++<gmess)std::cout<<" G4AllocatorPool::Free-I-GarbageCollected "<<coll<<" From "<<size<<" To "<<Size()<<std::endl;
 }
+}
+
 
 // ************************************************************
 // Size
@@ -145,6 +164,8 @@ G4AllocatorPool::Size() const
 {
   return nchunks*csize;
 }
+
+
 
 // ************************************************************
 // GetNoPages

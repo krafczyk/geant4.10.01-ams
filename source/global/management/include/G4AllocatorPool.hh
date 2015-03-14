@@ -46,7 +46,7 @@
 
 #ifndef G4AllocatorPool_h
 #define G4AllocatorPool_h 1
-
+#include <map>
 class G4AllocatorPool
 {
   public:
@@ -108,6 +108,8 @@ class G4AllocatorPool
     G4PoolLink* head;
     int nchunks;
     int free;
+    std::map<G4PoolLink*,G4PoolChunk*> fmap;
+    
 };
 
 // ------------------------------------------------------------
@@ -123,10 +125,12 @@ G4AllocatorPool::Alloc()
 {
   if (head==0) { Grow(); free++; }
   G4PoolLink* p = head;  // return first element
-  G4PoolChunk*n=GetChunk(p);
-  if(n)n->used++;
-  if(n && n->used==1)free--;
   head = p->next;
+  if(Threshold==0)return p;
+  G4PoolChunk*n=GetChunk(p);
+  if(n){
+      if(n->used++==0)free--;
+  }
   return p;
 }
 
@@ -140,13 +144,14 @@ inline void G4AllocatorPool::Free( void* b )
   G4PoolLink* p = static_cast<G4PoolLink*>(b);
   p->next = head;        // put b back as first element
   head = p;
+  if(Threshold==0)return ;
   G4PoolChunk *n=GetChunk(p);
   if(n){
     n->used--;
     if(n->used==0)free++;
    }
    unsigned long long size=Size();
-  if(size>Threshold  && free>nchunks/2+1){
+  if(size>Threshold && free>nchunks/2+1){
    unsigned long long coll=CollectGarbage();
    unsigned int mess=0;
    const unsigned int gmess=1000;

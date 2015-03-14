@@ -37,7 +37,7 @@
 #include <iostream>
 #include <vector>
 #include "G4AllocatorPool.hh"
-unsigned long long G4AllocatorPool::Threshold=20000000;
+unsigned long long G4AllocatorPool::Threshold=0;  //no garbage collection by default;
 
 // ************************************************************
 // G4AllocatorPool constructor
@@ -103,6 +103,7 @@ void G4AllocatorPool::Reset()
   chunks = 0;
   nchunks = 0;
   free=0; 
+   fmap.clear();
 }
 
 // ************************************************************
@@ -118,7 +119,10 @@ void G4AllocatorPool::Grow()
   n->next = chunks;
   chunks = n;
   nchunks++;
-
+  G4PoolLink *beg=reinterpret_cast<G4PoolLink*>(n->mem);
+  fmap.insert(std::make_pair(beg,n));
+  G4PoolLink *end=reinterpret_cast<G4PoolLink*>(n->mem+csize);
+  fmap.insert(std::make_pair(end,n));
   const int nelem = csize/esize;
   char* start = n->mem;
   char* last = &start[(nelem-1)*esize];
@@ -132,6 +136,10 @@ void G4AllocatorPool::Grow()
 }
 
 G4AllocatorPool::G4PoolChunk * G4AllocatorPool::GetChunk(G4PoolLink*p){
+  std::map<G4PoolLink*,G4PoolChunk*>::iterator it=fmap.upper_bound(p);
+  if(it!=fmap.end())return it->second;
+
+/*
   int k=0;
   for(G4PoolChunk*n=chunks;k++<nchunks;n=n->next){
      G4PoolLink *beg=reinterpret_cast<G4PoolLink*>(n->mem);
@@ -140,6 +148,7 @@ G4AllocatorPool::G4PoolChunk * G4AllocatorPool::GetChunk(G4PoolLink*p){
        return n; 
   }
   }
+*/
   std::cerr<<" G4AllocatorPool::GetChunk-S-NoPoolChunk "<<p<<" "<<" "<<nchunks<<std::endl ;
 
 return 0;
@@ -150,6 +159,7 @@ void G4AllocatorPool::Free( void* b )
   G4PoolLink* p = static_cast<G4PoolLink*>(b);
   p->next = head;        // put b back as first element
   head = p;
+  if(Threshold==0)return;
   G4PoolChunk *n=GetChunk(p);
   if(n){
     n->used--;
@@ -158,7 +168,7 @@ void G4AllocatorPool::Free( void* b )
    unsigned long long size=Size();
   if(size>Threshold  && free>nchunks/2+1){
    unsigned long long coll=CollectGarbage();
-   unsigned int mess=0;
+   static unsigned int mess=0;
    const unsigned int gmess=1000;
    if(mess++<gmess)std::cout<<" G4AllocatorPool::Free-I-GarbageCollected "<<coll<<" From "<<size<<" To "<<Size()<<std::endl;
 }
@@ -178,6 +188,7 @@ else head=p->next;
 else prev=p;
 }
  std::vector<G4PoolChunk*> del;
+ 
 G4PoolChunk * nrev=0;
 int k=0;
 for(G4PoolChunk*n=chunks;k++<nchunks;n=n->next){
@@ -195,6 +206,13 @@ if(n->used==0){
   }
   unsigned long long size=0;
   for(int k=0;k<del.size();k++){
+    for(std::map<G4PoolLink*,G4PoolChunk*>::iterator it=fmap.begin();it!=fmap.end();){
+     if (it->second ==del[k]){
+      std::map<G4PoolLink*,G4PoolChunk*>::iterator idel=it++;
+      fmap.erase(idel);
+     }
+     else it++;
+    }
     delete del[k];
     nchunks--;
     free--;

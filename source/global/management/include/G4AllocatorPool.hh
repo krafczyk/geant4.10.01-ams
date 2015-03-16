@@ -62,7 +62,7 @@ class G4AllocatorPool
 
     inline unsigned int  Size() const;
       // Return storage size
-    void  Reset();
+    void  Reset(unsigned long long size=0);
       // Return storage to the free store
 
     inline int  GetNoPages() const;
@@ -99,6 +99,7 @@ class G4AllocatorPool
       //   
       //
      G4PoolChunk * GetChunk( G4PoolLink *p); 
+public:
      unsigned long long CollectGarbage(); 
   private:
 
@@ -151,7 +152,7 @@ inline void G4AllocatorPool::Free( void* b )
     if(n->used==0)free++;
    }
    unsigned long long size=Size();
-  if(size>Threshold && free>nchunks/2+1){
+  if(Threshold >0&& size>Threshold && free>nchunks/2+1){  //Threshold>0 auto garbage
    unsigned long long coll=CollectGarbage();
    unsigned int mess=0;
    const unsigned int gmess=1000;

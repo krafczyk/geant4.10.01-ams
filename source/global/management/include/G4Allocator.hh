@@ -48,17 +48,21 @@
 #include <cstddef>
 
 #include "G4AllocatorPool.hh"
-
+#include <string>
+#include <typeinfo>
 class G4AllocatorBase
 {
   public:
+    std::string tn;
     G4AllocatorBase(); 
     virtual ~G4AllocatorBase();
     virtual void ResetStorage()=0;
+    virtual void ClearStorage(unsigned long long sz)=0;
     virtual size_t GetAllocatedSize() const=0;
     virtual int GetNoPages() const=0;
     virtual size_t GetPageSize() const=0;
     virtual void IncreasePageSize( unsigned int sz )=0;
+    virtual size_t CollectGarbage()=0; 
 };
 
 template <class Type>
@@ -75,10 +79,11 @@ class G4Allocator : public G4AllocatorBase
       // Malloc and Free methods to be used when overloading
       // new and delete operators in the client <Type> object
 
-    inline void ResetStorage();
+      inline void ResetStorage();
+      inline void ClearStorage(unsigned long long sz);
       // Returns allocated storage to the free store, resets allocator.
       // Note: contents in memory are lost using this call !
-
+     inline size_t CollectGarbage();
     inline size_t GetAllocatedSize() const;
       // Returns the size of the total memory allocated
     inline int GetNoPages() const;
@@ -172,8 +177,8 @@ template <class Type>
 G4Allocator<Type>::G4Allocator() throw()
   : mem(sizeof(Type))
 {
+tn=typeid(this).name();
 }
-
 // ************************************************************
 // G4Allocator destructor
 // ************************************************************
@@ -204,18 +209,6 @@ void G4Allocator<Type>::FreeSingle(Type* anElement)
   return;
 }
 
-// ************************************************************
-// ResetStorage
-// ************************************************************
-//
-template <class Type>
-void G4Allocator<Type>::ResetStorage()
-{
-  // Clear all allocated storage and return it to the free store
-  //
-  mem.Reset();
-  return;
-}
 
 // ************************************************************
 // GetAllocatedSize
@@ -226,6 +219,37 @@ size_t G4Allocator<Type>::GetAllocatedSize() const
 {
   return mem.Size();
 }
+
+
+  template <class Type>
+   void G4Allocator<Type>::ResetStorage()
+    {
+       // Clear all allocated storage and return it to the free store
+       //
+       mem.Reset();
+       return;
+  }
+
+
+
+
+  template <class Type>
+   void G4Allocator<Type>::ClearStorage(unsigned long long size)
+    {
+       // Clear  not necessarily all  allocated storage and return it to the free store
+       //
+       mem.Reset(size);
+       return;
+       }
+
+
+template <class Type>
+size_t G4Allocator<Type>::CollectGarbage() 
+{
+  return mem.CollectGarbage();
+}
+
+
 
 // ************************************************************
 // GetNoPages

@@ -64,6 +64,8 @@ void G4AllocatorList::Register(G4AllocatorBase* alloc)
   fList.push_back(alloc);
 }
 
+
+
 void G4AllocatorList::Destroy(G4int nStat, G4int verboseLevel)
 {
   std::vector<G4AllocatorBase*>::iterator itr=fList.begin();
@@ -97,6 +99,43 @@ void G4AllocatorList::Destroy(G4int nStat, G4int verboseLevel)
   }
   fList.clear();
 }
+
+
+
+unsigned long long G4AllocatorList::CollectGarbage(unsigned long long thr)
+{
+  unsigned long long mem=0;
+  for(std::vector<G4AllocatorBase*>::iterator itr=fList.begin(); itr!=fList.end();++itr){
+    if((*itr)->GetAllocatedSize()>thr)
+    mem += (*itr)->CollectGarbage();
+}
+  return mem;
+}
+
+
+
+
+unsigned long long G4AllocatorList::GetAllocatedSize()
+{
+  unsigned long long mem=0;
+  for(std::vector<G4AllocatorBase*>::iterator itr=fList.begin(); itr!=fList.end();++itr){
+    mem+=(*itr)->GetAllocatedSize();
+}
+  return mem;
+}
+
+
+
+int G4AllocatorList::GetNoPages()
+{
+  unsigned long long mem=0;
+  for(std::vector<G4AllocatorBase*>::iterator itr=fList.begin(); itr!=fList.end();++itr){
+    mem+=(*itr)->GetNoPages();
+}
+  return mem;
+}
+
+
 
 G4int G4AllocatorList::Size() const
 {

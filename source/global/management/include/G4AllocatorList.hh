@@ -58,12 +58,14 @@ class G4AllocatorList
     void Register(G4AllocatorBase*);
     void Destroy(G4int nStat=0, G4int verboseLevel=0);
     G4int Size() const;
-
+    unsigned long long  CollectGarbage(unsigned long long thr);
+    unsigned long long  GetAllocatedSize();
+    int GetNoPages();
   private:
 
     G4AllocatorList();
 
-  private:
+  public:
 
     static G4ThreadLocal G4AllocatorList* fAllocatorList;
     std::vector<G4AllocatorBase*> fList;

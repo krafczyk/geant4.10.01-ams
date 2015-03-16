@@ -45,7 +45,7 @@ unsigned long long G4AllocatorPool::Threshold=0;  //no garbage collection by def
 //
 G4AllocatorPool::G4AllocatorPool( unsigned int sz )
   : esize(sz<sizeof(G4PoolLink) ? sizeof(G4PoolLink) : sz),
-    csize(sz<1024/2-16 ? 1024-16 : sz*10-16),
+    csize(sz<1024 ? 1024*64-16 : sz*64-16),
     chunks(0), head(0), nchunks(0),free(0)
 {
 }
@@ -87,7 +87,7 @@ G4AllocatorPool::~G4AllocatorPool()
 // Reset
 // ************************************************************
 //
-void G4AllocatorPool::Reset()
+void G4AllocatorPool::Reset(unsigned long long size)
 {
   // Free all chunks
   //
@@ -153,29 +153,8 @@ G4AllocatorPool::G4PoolChunk * G4AllocatorPool::GetChunk(G4PoolLink*p){
 
 return 0;
 }
-/*
-void G4AllocatorPool::Free( void* b )
-{
-  G4PoolLink* p = static_cast<G4PoolLink*>(b);
-  p->next = head;        // put b back as first element
-  head = p;
-  if(Threshold==0)return;
-  G4PoolChunk *n=GetChunk(p);
-  if(n){
-    n->used--;
-    if(n->used==0)free++;
-   }
-   unsigned long long size=Size();
-  if(size>Threshold  && free>nchunks/2+1){
-   unsigned long long coll=CollectGarbage();
-   static unsigned int mess=0;
-   const unsigned int gmess=1000;
-   if(mess++<gmess)std::cout<<" G4AllocatorPool::Free-I-GarbageCollected "<<coll<<" From "<<size<<" To "<<Size()<<std::endl;
-}
-}
-*/
 unsigned long long G4AllocatorPool::CollectGarbage(){
-//std::cout<<" G4AllocatorPool::CollectGarbage-I-Entered "<<std::endl;
+if(!Threshold)return 0;
 G4PoolLink *prev=0;
 unsigned int el=0;
 for(G4PoolLink *p=head;p;p=p->next){

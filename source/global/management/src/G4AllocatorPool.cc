@@ -45,9 +45,17 @@ unsigned long long G4AllocatorPool::Threshold=0;  //no garbage collection by def
 //
 G4AllocatorPool::G4AllocatorPool( unsigned int sz )
   : esize(sz<sizeof(G4PoolLink) ? sizeof(G4PoolLink) : sz),
-    csize(sz<1024 ? 1024*64-16 : sz*64-16),
+//    csize(sz<1024 ? 1024*64-16 : sz*64-16),
+      
     chunks(0), head(0), nchunks(0),free(0)
 {
+const int ms=512000;
+const int ml=10;
+if(sz*ml>ms)csize=sz*ml-16;
+else {
+int nl=ms/sz/8;
+csize=sz*nl*8-16;
+}
 }
 
 // ************************************************************
@@ -154,7 +162,7 @@ G4AllocatorPool::G4PoolChunk * G4AllocatorPool::GetChunk(G4PoolLink*p){
 return 0;
 }
 unsigned long long G4AllocatorPool::CollectGarbage(){
-if(!Threshold)return 0;
+if(!Threshold || GetNoPages()<2)return 0;
 G4PoolLink *prev=0;
 unsigned int el=0;
 for(G4PoolLink *p=head;p;p=p->next){

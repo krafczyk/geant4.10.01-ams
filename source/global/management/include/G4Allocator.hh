@@ -61,8 +61,13 @@ class G4AllocatorBase
     virtual size_t GetAllocatedSize() const=0;
     virtual int GetNoPages() const=0;
     virtual size_t GetPageSize() const=0;
+    virtual int GetUsed() const=0; 
+    virtual int GetFree() const=0;
     virtual void IncreasePageSize( unsigned int sz )=0;
     virtual size_t CollectGarbage()=0; 
+    virtual G4AllocatorPool::G4PoolChunk* GetChunk(void* anElement)=0;
+
+
 };
 
 template <class Type>
@@ -76,6 +81,7 @@ class G4Allocator : public G4AllocatorBase
 
     inline Type* MallocSingle();
     inline void FreeSingle(Type* anElement);
+ 
       // Malloc and Free methods to be used when overloading
       // new and delete operators in the client <Type> object
 
@@ -84,9 +90,12 @@ class G4Allocator : public G4AllocatorBase
       // Returns allocated storage to the free store, resets allocator.
       // Note: contents in memory are lost using this call !
      inline size_t CollectGarbage();
+     inline G4AllocatorPool::G4PoolChunk* GetChunk(void* anElement);
     inline size_t GetAllocatedSize() const;
       // Returns the size of the total memory allocated
     inline int GetNoPages() const;
+    inline int GetUsed() const;
+    inline int GetFree() const;
       // Returns the total number of allocated pages
     inline size_t GetPageSize() const;
       // Returns the current size of a page
@@ -209,6 +218,13 @@ void G4Allocator<Type>::FreeSingle(Type* anElement)
   return;
 }
 
+template <class Type>
+G4AllocatorPool::G4PoolChunk* G4Allocator<Type>::GetChunk(void* b)
+{
+ G4AllocatorPool::G4PoolLink* p = static_cast<G4AllocatorPool::G4PoolLink*>(b);
+  return mem.GetChunk(p);
+}
+
 
 // ************************************************************
 // GetAllocatedSize
@@ -260,6 +276,24 @@ int G4Allocator<Type>::GetNoPages() const
 {
   return mem.GetNoPages();
 }
+
+template <class Type>
+int G4Allocator<Type>::GetUsed() const
+{
+  return mem.GetUsed();
+}
+
+
+template <class Type>
+int G4Allocator<Type>::GetFree() const
+{
+  return mem.GetFree();
+}
+
+
+
+
+
 
 // ************************************************************
 // GetPageSize

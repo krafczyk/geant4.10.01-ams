@@ -126,6 +126,18 @@ unsigned long long G4AllocatorList::GetAllocatedSize()
 
 
 
+ long long G4AllocatorList::GetUsed()
+{
+   long long mem=0;
+  for(std::vector<G4AllocatorBase*>::iterator itr=fList.begin(); itr!=fList.end(
+);++itr){
+    mem+=(*itr)->GetUsed();
+}
+  return mem;
+}
+
+
+
 int G4AllocatorList::GetNoPages()
 {
   unsigned long long mem=0;
@@ -134,6 +146,7 @@ int G4AllocatorList::GetNoPages()
 }
   return mem;
 }
+
 
 
 

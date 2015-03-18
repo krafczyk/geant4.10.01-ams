@@ -61,6 +61,7 @@ class G4AllocatorList
     unsigned long long  CollectGarbage(unsigned long long thr);
     unsigned long long  GetAllocatedSize();
     int GetNoPages();
+    long long GetUsed();
   private:
 
     G4AllocatorList();

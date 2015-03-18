@@ -50,7 +50,7 @@
 class G4AllocatorPool
 {
   public:
-  static unsigned long long Threshold; 
+  static  long long Threshold; 
     explicit G4AllocatorPool( unsigned int n=0 );
       // Create a pool of elements of size n
     ~G4AllocatorPool();
@@ -64,7 +64,8 @@ class G4AllocatorPool
       // Return storage size
     void  Reset(unsigned long long size=0);
       // Return storage to the free store
-
+    int GetUsed()const;
+     inline int GetFree() const {return free;}
     inline int  GetNoPages() const;
       // Return the total number of allocated pages
     inline unsigned int  GetPageSize() const;
@@ -77,7 +78,7 @@ class G4AllocatorPool
       // Provate copy constructor
     G4AllocatorPool& operator= (const G4AllocatorPool& right);
       // Private equality operator
-
+public:
     struct G4PoolLink
     {
       G4PoolLink* next;
@@ -98,8 +99,7 @@ class G4AllocatorPool
       // Make pool larger
       //   
       //
-     G4PoolChunk * GetChunk( G4PoolLink *p); 
-public:
+     G4PoolChunk * GetChunk( G4PoolLink *p);
      unsigned long long CollectGarbage(); 
   private:
 

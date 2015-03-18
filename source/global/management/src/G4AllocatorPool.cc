@@ -37,7 +37,7 @@
 #include <iostream>
 #include <vector>
 #include "G4AllocatorPool.hh"
-unsigned long long G4AllocatorPool::Threshold=0;  //no garbage collection by default;
+long long G4AllocatorPool::Threshold=0;  //no garbage collection by default;
 
 // ************************************************************
 // G4AllocatorPool constructor
@@ -49,7 +49,7 @@ G4AllocatorPool::G4AllocatorPool( unsigned int sz )
       
     chunks(0), head(0), nchunks(0),free(0)
 {
-const int ms=512000;
+const int ms=128000;
 const int ml=10;
 if(sz*ml>ms)csize=sz*ml-16;
 else {
@@ -90,6 +90,13 @@ G4AllocatorPool::~G4AllocatorPool()
 {
   Reset();
 }
+
+int G4AllocatorPool::GetUsed() const{
+  int used=0;
+  for(G4PoolChunk* n = chunks;n;n=n->next)used+=n->used;
+  return used;
+}
+
 
 // ************************************************************
 // Reset
@@ -144,8 +151,11 @@ void G4AllocatorPool::Grow()
 }
 
 G4AllocatorPool::G4PoolChunk * G4AllocatorPool::GetChunk(G4PoolLink*p){
-  std::map<G4PoolLink*,G4PoolChunk*>::iterator it=fmap.upper_bound(p);
-  if(it!=fmap.end())return it->second;
+  std::map<G4PoolLink*,G4PoolChunk*>::iterator ite=fmap.upper_bound(p);
+  std::map<G4PoolLink*,G4PoolChunk*>::iterator itb=fmap.lower_bound(p);
+   
+  if(ite!=fmap.end() && itb!=fmap.end() && ite->second==itb->second)return ite->second;
+
 
 /*
   int k=0;

@@ -100,7 +100,7 @@ class G4NavigationLevel
      // Pre-allocated 'new' and 'delete' for use with STL 
      // Do not (directly) use Allocator
 
- private:
+ public:
 
    G4NavigationLevelRep*  fLevelRep;
 };

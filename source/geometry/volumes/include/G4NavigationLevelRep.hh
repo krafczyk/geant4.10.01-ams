@@ -95,7 +95,7 @@ class G4NavigationLevelRep
    inline void operator delete(void *aTrack);
      // Override "delete" to use "G4Allocator".
 
- private:
+ public:
 
    G4AffineTransform  sTransform;
      // Compounded global->local transformation (takes a point in the 

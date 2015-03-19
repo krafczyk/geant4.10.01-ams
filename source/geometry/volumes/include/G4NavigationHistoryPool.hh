@@ -78,7 +78,7 @@ class G4NavigationHistoryPool
     void Reset();
       // Set internal vectors content to zero.
 
-  private:
+  public:
 
     static G4ThreadLocal G4NavigationHistoryPool* fgInstance;
 

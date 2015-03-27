@@ -41,3 +41,6 @@ patching file source/processes/electromagnetic/xrays/src/G4XTRTransparentRegRadM
 G4SDStructure.C removing destructor
 G4ComponentGGNuclNuclXsc.hh   add possibility to scale xsection
 G4PhysicsVector.cc  ::Value  Protection against out of bound access ~
+G4Allocator*.hh,cc grabagecollection
+G4NavigationPoolHistory.hh private->public
+G4HadronicProcess.cc  remove result->Clear() twice ! Major bug

@@ -530,7 +530,8 @@ G4HadFinalState* G4HadronicProcess::CheckResult(const G4HadProjectile & aPro,
       G4double mass_pdg=pdyn->GetDefinition()->GetPDGMass();
       G4double mass_dyn=pdyn->GetMass();
       if ( std::abs(mass_pdg - mass_dyn) > 0.1*mass_pdg + 1.*MeV){
-          result->Clear();
+
+          //result->Clear();
           result = 0;
           G4ExceptionDescription desc;
           desc << "Warning: Secondary with off-shell dynamic mass detected:  " << G4endl
@@ -557,7 +558,8 @@ G4HadFinalState* G4HadronicProcess::CheckResult(const G4HadProjectile & aPro,
     if (std::abs(deltaE) > checkLevels.second && 
         std::abs(deltaE) > checkLevels.first*aPro.GetKineticEnergy()){
       // do not delete result, this is a pointer to a data member;
-      result->Clear();
+     //  major bug VC
+    //  result->Clear();
       result = 0;
       G4ExceptionDescription desc;
       desc << "Warning: Bad energy non-conservation detected, will "

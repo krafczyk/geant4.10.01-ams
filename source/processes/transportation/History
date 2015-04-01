@@ -17,6 +17,14 @@ committal in the CVS repository !
      * Reverse chronological order (last date on top), please *
      ----------------------------------------------------------
 
+January 10th 2015, M.Kelsey transport-V10-00-09
+---------------------------
+- G4Transportation.cc, G4CoupledTransportation: In
+  AlongStepGetPhysicalInteractionLength(), initialize restMass data member
+  using G4DynamicParticle (as is used in DoIt), not G4ParticleDefinition.
+  Resolves inconsistent kinematics when dynamic mass is measurably different
+  from "PDG" mass.
+
 November 21st 2014, J.Apostolakis transport-V10-00-06
 --------------------------------- (corrected version of transport-V10-00-04)
 - Added initialization of G4CoupledTransportation data members (fixes Coverity issue 15280)

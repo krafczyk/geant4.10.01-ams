@@ -72,10 +72,10 @@ set(CMAKE_MODULE_PATH
 # See the documentation in each of these modules for further details.
 #
 # - Versioning. We do this here for now
-set(${PROJECT_NAME}_VERSION "10.1.0")
+set(${PROJECT_NAME}_VERSION "10.1.1")
 set(${PROJECT_NAME}_VERSION_MAJOR "10")
 set(${PROJECT_NAME}_VERSION_MINOR "1")
-set(${PROJECT_NAME}_VERSION_PATCH "0")
+set(${PROJECT_NAME}_VERSION_PATCH "1")
 
 # - Provide dependent options as these are needed for some Geant4 features
 include(CMakeDependentOption)
@@ -158,12 +158,12 @@ if(GEANT4_BUILD_EXAMPLES)
 endif()
 
 # - Install example code to datarootdir
-#install(DIRECTORY examples
-#  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/Geant4-${Geant4_VERSION}
-#  COMPONENT Examples
-#  PATTERN "CVS" EXCLUDE
-#  PATTERN ".svn" EXCLUDE
-#  )
+install(DIRECTORY examples
+  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/Geant4-${Geant4_VERSION}
+  COMPONENT Examples
+  PATTERN "CVS" EXCLUDE
+  PATTERN ".svn" EXCLUDE
+  )
 
 
 #-----------------------------------------------------------------------------

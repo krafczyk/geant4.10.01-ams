@@ -22,6 +22,7 @@ ifeq ($(G4SYSTEM),Linuxk1omic-icc-mt)
       CCFLAGS   := -g -mmic -fp-model precise
     endif
   endif
+#   CPPFLAGS  += -I/usr/include
   ifdef G4PROFILE
     CXXFLAGS  += -qp
     FCFLAGS   += -qp

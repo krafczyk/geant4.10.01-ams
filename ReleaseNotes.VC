@@ -5,8 +5,8 @@ G4VPhysicalVolume.CC  add SetMother in constructor  ok
 
 G4ParticleGun.cc          Modified to  allow changing of momentum, energy and particle properties without creating a new instance  ok
 
-G4OpBoundaryProcess.cc    proper handling of boundary procs ok
-
+G4OpBoundaryProcess.cc   protection groupvel +  proper handling of boundary procs ok
+                                
 G4Exception.cc throw an exception, instead of abort  ok
 ./source/global/management/include/ams_g4exception.h   new file  ok
 G4IonsShenCrossSection.cc upperLimit ( 100 * TeV ),   ok
@@ -42,5 +42,6 @@ G4SDStructure.C removing destructor
 G4ComponentGGNuclNuclXsc.hh   add possibility to scale xsection
 G4PhysicsVector.cc  ::Value  Protection against out of bound access ~
 G4Allocator*.hh,cc grabagecollection
-G4NavigationPoolHistory.hh private->public
+G4NavigationHistoryPool.hh private->public
 G4HadronicProcess.cc  remove result->Clear() twice ! Major bug
+G4VEnergyLossProcess.cc reinstate min int length 1e-6 instead of 0  (as 4.9.4)

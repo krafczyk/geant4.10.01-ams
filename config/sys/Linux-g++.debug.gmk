@@ -28,9 +28,9 @@ ifeq ($(G4SYSTEM),Linux-g++.debug)
     CCFLAGS   := -O2
   else
     ifdef G4DEBUG
-      CXXFLAGS  += -g
-      FCFLAGS   := -g
-      CCFLAGS   := -g
+      CXXFLAGS  += -g -gdwarf-2
+      FCFLAGS   := -g -gdwarf-2
+      CCFLAGS   := -g -gdwarf-2
     endif
   endif
   ifdef G4PROFILE

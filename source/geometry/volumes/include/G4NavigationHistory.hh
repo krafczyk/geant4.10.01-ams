@@ -43,16 +43,14 @@
 #define G4NAVIGATIONHISTORY_HH
 
 #include <assert.h>
-#include <vector>
-#include <iostream>
-
 #include "geomdefs.hh"
-#include "geomwdefs.hh"
+
 #include "G4AffineTransform.hh"
 #include "G4VPhysicalVolume.hh"
 #include "G4NavigationLevel.hh"
-#include "G4NavigationHistoryPool.hh"
-#include "G4Allocator.hh"
+
+#include <vector>
+#include <iostream>
 
 class G4NavigationHistory
 {
@@ -71,7 +69,7 @@ class G4NavigationHistory
   G4NavigationHistory(const G4NavigationHistory &h);
     // Copy constructor.
 
-  inline G4NavigationHistory& operator=(const G4NavigationHistory &h);
+  G4NavigationHistory& operator=(const G4NavigationHistory &h);
     // Assignment operator.
 
   inline void Reset();
@@ -132,11 +130,6 @@ class G4NavigationHistory
   inline void BackLevel(G4int n);
     // Back up specified number of levels in history.
 
-  inline void *operator new(size_t);
-    // Override "new" for "G4Allocator".
-  inline void operator delete(void *aHistory);
-    // Override "delete" for "G4Allocator".
-
  private:
 
   inline void EnlargeHistory();
@@ -146,11 +139,11 @@ class G4NavigationHistory
 
  private:
 
-  std::vector<G4NavigationLevel> *fNavHistory;
-    // Pointer to the vector of navigation levels.
+  std::vector<G4NavigationLevel> fNavHistory;
 
   G4int fStackDepth;
-    // Depth of stack: effectively depth in geometrical tree.
+    // Depth of stack: effectively depth in geometrical tree
+
 };
 
 #include "G4NavigationHistory.icc"

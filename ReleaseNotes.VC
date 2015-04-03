@@ -41,7 +41,9 @@ patching file source/processes/electromagnetic/xrays/src/G4XTRTransparentRegRadM
 G4SDStructure.C removing destructor
 G4ComponentGGNuclNuclXsc.hh   add possibility to scale xsection
 G4PhysicsVector.cc  ::Value  Protection against out of bound access ~
-G4Allocator*.hh,cc grabagecollection
+G4Allocator*.hh,cc garbagecollection
 G4NavigationHistoryPool.hh private->public
+G4OpBoundaryProcesses.cc // fix null pounter grouplelvel
 G4HadronicProcess.cc  remove result->Clear() twice ! Major bug
 G4VEnergyLossProcess.cc reinstate min int length 1e-6 instead of 0  (as 4.9.4)
+G4NavigationHistory.(hh,icc,cc)  taken back from 4.9.6 to get reasonable  performance for high energy . G4NavigationHistoryPool.* are hence not used any more

@@ -536,8 +536,11 @@ G4OpBoundaryProcess::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
         if ( theStatus == FresnelRefraction || theStatus == Transmission ) {
            G4MaterialPropertyVector* groupvel =
            Material2->GetMaterialPropertiesTable()->GetProperty("GROUPVEL");
+           if(groupvel){
            G4double finalVelocity = groupvel->Value(thePhotonMomentum);
            aParticleChange.ProposeVelocity(finalVelocity);
+          }
+          else G4cerr<<"  groupvel 0 "<<G4endl;
         }
 
         if ( theStatus == Detection ) InvokeSD(pStep);

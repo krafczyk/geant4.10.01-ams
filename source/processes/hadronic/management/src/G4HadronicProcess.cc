@@ -325,7 +325,7 @@ G4HadronicProcess::PostStepDoIt(const G4Track& aTrack, const G4Step&)
 	 << "  A= " << targetNucleus.GetA_asInt() << G4endl;
       DumpState(aTrack,"ApplyYourself",ed);
       ed << " ApplyYourself does not completed after 100 attempts" << G4endl;
-      G4Exception("G4HadronicProcess::PostStepDoIt", "had006", FatalException,
+      G4Exception("G4HadronicProcess::PostStepDoIt", "had006", EventMustBeAborted,
 		  ed);
     }
   }

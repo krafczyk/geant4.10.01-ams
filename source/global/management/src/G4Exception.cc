@@ -116,6 +116,7 @@ void G4Exception(const char* originOfException,
       G4cerr <<  "*** G4Exception: throwing exception ***" << G4endl;
    int sev=0;
    if(severity==RunMustBeAborted )sev=2; 
+   else if(severity==FatalException)sev=3;
      ams_g4exception myexc(sev);
      throw myexc;
  }

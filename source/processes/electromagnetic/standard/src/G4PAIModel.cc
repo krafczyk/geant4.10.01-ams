@@ -193,6 +193,7 @@ void G4PAIModel::InitialiseLocal(const G4ParticleDefinition*,
 				 G4VEmModel* masterModel)
 {
   fModelData = static_cast<G4PAIModel*>(masterModel)->GetPAIModelData();
+  fMaterialCutsCoupleVector = static_cast<G4PAIModel*>(masterModel)->GetMaterialCutsCoupleVector();
   SetElementSelectors(masterModel->GetElementSelectors());
 }
 

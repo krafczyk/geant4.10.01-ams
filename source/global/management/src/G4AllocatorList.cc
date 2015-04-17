@@ -106,7 +106,7 @@ unsigned long long G4AllocatorList::CollectGarbage(unsigned long long thr)
 {
   unsigned long long mem=0;
   for(std::vector<G4AllocatorBase*>::iterator itr=fList.begin(); itr!=fList.end();++itr){
-    if((*itr)->GetAllocatedSize()>thr)
+    if((*itr)->GetAllocatedSize()>(thr?thr:G4AllocatorPool::GetThreshold()))
     mem += (*itr)->CollectGarbage();
 }
   return mem;

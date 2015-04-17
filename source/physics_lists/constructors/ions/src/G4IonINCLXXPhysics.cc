@@ -47,7 +47,7 @@
 #include "G4Alpha.hh"
 #include "G4GenericIon.hh"
 #include "G4IonConstructor.hh"
-
+#include "G4GGNuclNuclCrossSection.hh"
 #include "G4HadronInelasticProcess.hh"
 #include "G4ComponentGGNuclNuclXsc.hh"
 #include "G4CrossSectionInelastic.hh"
@@ -67,7 +67,8 @@ G4_DECLARE_PHYSCONSTR_FACTORY(G4IonINCLXXPhysics);
 
 G4ThreadLocal std::vector<G4HadronInelasticProcess*>* G4IonINCLXXPhysics::p_list = 0;
 G4ThreadLocal std::vector<G4HadronicInteraction*>* G4IonINCLXXPhysics::model_list = 0;
-G4ThreadLocal G4VCrossSectionDataSet* G4IonINCLXXPhysics::theNuclNuclData = 0; 
+G4ThreadLocal G4VCrossSectionDataSet* G4IonINCLXXPhysics::theNuclNuclData = 0;
+G4ThreadLocal G4GGNuclNuclCrossSection* G4IonINCLXXPhysics::fGG=0; 
 G4ThreadLocal G4VComponentCrossSection* G4IonINCLXXPhysics::theGGNuclNuclXS = 0;
 G4ThreadLocal G4INCLXXInterface* G4IonINCLXXPhysics::theINCLXXDeuteron = 0;
 G4ThreadLocal G4INCLXXInterface* G4IonINCLXXPhysics::theINCLXXTriton = 0;
@@ -96,7 +97,7 @@ G4IonINCLXXPhysics::G4IonINCLXXPhysics(G4int ver) :
   emax_he3   = 3 * 3.0 * GeV;
   emax_alpha = 4 * 3.0 * GeV;
   emax       = 18 * 3.0 * GeV;
-  emaxFTFP   = 1.*TeV;
+  emaxFTFP   = 100.*TeV;
   emin       = 0.*MeV;
   SetPhysicsType(bIons);
   if(verbose > 1) G4cout << "### G4IonINCLXXPhysics" << G4endl;
@@ -113,7 +114,7 @@ G4IonINCLXXPhysics::G4IonINCLXXPhysics(const G4String& name,
   emax_he3   = 3 * 3.0 * GeV;
   emax_alpha = 4 * 3.0 * GeV;
   emax       = 18 * 3.0 * GeV;
-  emaxFTFP   = 1.*TeV;
+  emaxFTFP   = 100.*TeV;
   emin       = 0.*MeV;
   SetPhysicsType(bIons);
   if(verbose > 1) G4cout << "### G4IonINCLXXPhysics" << G4endl;
@@ -183,7 +184,7 @@ void G4IonINCLXXPhysics::ConstructProcess()
   model_list->push_back(theFTFPHe3);
   model_list->push_back(theFTFPAlpha);
   model_list->push_back(theFTFPIons);
-
+  fGG = new G4GGNuclNuclCrossSection();
   theNuclNuclData = new G4CrossSectionInelastic( theGGNuclNuclXS = new G4ComponentGGNuclNuclXsc() );
 
   AddProcess("dInelastic", G4Deuteron::Deuteron(), theINCLXXDeuteron, theFTFPDeuteron, emax_d);
@@ -204,7 +205,7 @@ void G4IonINCLXXPhysics::AddProcess(const G4String& name,
   p_list->push_back(hadi);
   G4ProcessManager* pManager = p->GetProcessManager();
   pManager->AddDiscreteProcess(hadi);
-  hadi->AddDataSet(theNuclNuclData);    
+  hadi->AddDataSet(fGG);    
   hmodel->SetMinEnergy(emin);
   hmodel->SetMaxEnergy(inclxxEnergyUpperLimit);
   hadi->RegisterMe(hmodel);

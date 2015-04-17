@@ -49,8 +49,14 @@
 #include <map>
 class G4AllocatorPool
 {
+  private:
+  static   long long gThreshold;  // Garbage Collection Threshold
   public:
-  static  long long Threshold; 
+   static unsigned long long  GetThreshold(){return gThreshold>0?gThreshold:-gThreshold;}
+   static bool AutoGarbageCollectionOn(){return gThreshold>0;}
+   static bool GarbageCollectionOff(){return gThreshold==0;} 
+   static void SetGarbageCollection(unsigned long long threshold=1000000, bool autogarbage=false); 
+       
     explicit G4AllocatorPool( unsigned int n=0 );
       // Create a pool of elements of size n
     ~G4AllocatorPool();
@@ -127,11 +133,9 @@ G4AllocatorPool::Alloc()
   if (head==0) { Grow(); free++; }
   G4PoolLink* p = head;  // return first element
   head = p->next;
-  if(Threshold==0)return p;
+  if(GarbageCollectionOff())return p;
   G4PoolChunk*n=GetChunk(p);
-  if(n){
-      if(n->used++==0)free--;
-  }
+  if(n && n->used++==0)free--;
   return p;
 }
 
@@ -145,18 +149,14 @@ inline void G4AllocatorPool::Free( void* b )
   G4PoolLink* p = static_cast<G4PoolLink*>(b);
   p->next = head;        // put b back as first element
   head = p;
-  if(Threshold==0)return ;
+  if(GarbageCollectionOff())return ;
   G4PoolChunk *n=GetChunk(p);
-  if(n){
-    n->used--;
-    if(n->used==0)free++;
-   }
-   unsigned long long size=Size();
-  if(Threshold >0&& size>Threshold && free>nchunks/2+1){  //Threshold>0 auto garbage
+  if(n && --(n->used)==0)free++;
+  if(AutoGarbageCollectionOn() && free>nchunks/2+1 && Size()>GetThreshold() ){  
    unsigned long long coll=CollectGarbage();
-   unsigned int mess=0;
-   const unsigned int gmess=1000;
-   if(mess++<gmess)std::cout<<" G4AllocatorPool::Free-I-GarbageCollected "<<coll<<" From "<<size<<" To "<<Size()<<std::endl;
+   //unsigned int mess=0;
+   //const unsigned int gmess=1000;
+   //if(mess++<gmess)std::cout<<" G4AllocatorPool::Free-I-GarbageCollected "<<coll<<" From "<<size<<" To "<<Size()<<std::endl;
 }
 }
 

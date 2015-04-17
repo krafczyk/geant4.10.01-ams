@@ -48,3 +48,6 @@ G4HadronicProcess.cc  CheckResult change FatalException to EventMustBeAborted
 G4VEnergyLossProcess.cc reinstate min int length 1e-6 instead of 0  (as 4.9.4)
 G4NavigationHistory.(hh,icc,cc)  taken back from 4.9.6 to get reasonable  performance for high energy . G4NavigationHistoryPool.* are hence not used any more
 G4PAIModel.{hh,cc}: Fix initialization for G4 10 MT mode.
+G4NavigationHistoryPool  :  reinstated after bug fix by G. Cosmo
+G4IonINCLXXPhysics.cc  change xsection to GG
+G4IonINCLXXPhysics.hh   private->public

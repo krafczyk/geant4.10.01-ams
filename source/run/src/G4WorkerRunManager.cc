@@ -42,6 +42,7 @@
 #include "G4RNGHelper.hh"
 #include "G4Run.hh"
 #include "G4VUserPrimaryGeneratorAction.hh"
+#include "G4AllocatorList.hh"
 #include "G4VVisManager.hh"
 #include "G4SDManager.hh"
 #include "G4VScoringMesh.hh"
@@ -223,9 +224,11 @@ void G4WorkerRunManager::DoEventLoop(G4int n_event, const char* macroFile , G4in
     G4int i_event = -1;
     nevModulo = -1;
     currEvID = -1;
-
+    
     while(eventLoopOnGoing)
     {
+     G4AllocatorList *fa=G4AllocatorList::GetAllocatorListIfExist(); 
+     if(fa)fa->CollectGarbage(); 
       ProcessOneEvent(i_event);
       if(eventLoopOnGoing)
       {

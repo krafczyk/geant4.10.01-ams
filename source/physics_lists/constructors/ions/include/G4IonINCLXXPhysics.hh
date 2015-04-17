@@ -43,7 +43,7 @@
 #include "G4VPhysicsConstructor.hh"
 
 #include <vector>
-
+class G4GGNuclNuclCrossSection;
 class G4HadronInelasticProcess;
 class G4HadronicInteraction;
 class G4INCLXXInterface;
@@ -67,7 +67,7 @@ public:
   // registered to the process manager of each particle type
   virtual void ConstructProcess();
 
-private:
+public:
 
   void AddProcess(const G4String&,
 		  G4ParticleDefinition*, 
@@ -78,6 +78,7 @@ private:
   static G4ThreadLocal std::vector<G4HadronicInteraction*>* model_list;
 
   static G4ThreadLocal G4VCrossSectionDataSet* theNuclNuclData; 
+  static G4ThreadLocal G4GGNuclNuclCrossSection* fGG; 
   static G4ThreadLocal G4VComponentCrossSection* theGGNuclNuclXS;
 
   static G4ThreadLocal G4INCLXXInterface* theINCLXXDeuteron;

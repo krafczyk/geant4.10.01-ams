@@ -37,7 +37,11 @@
 #include <iostream>
 #include <vector>
 #include "G4AllocatorPool.hh"
-long long G4AllocatorPool::Threshold=0;  //no garbage collection by default;
+long long G4AllocatorPool::gThreshold=-4000000;   // No AutoGarbage collection by default 
+
+void G4AllocatorPool::SetGarbageCollection(unsigned long long thr, bool autogarbage ){
+gThreshold=autogarbage?thr:-thr;
+}
 
 // ************************************************************
 // G4AllocatorPool constructor
@@ -134,11 +138,11 @@ void G4AllocatorPool::Grow()
   n->next = chunks;
   chunks = n;
   nchunks++;
-  G4PoolLink *beg=reinterpret_cast<G4PoolLink*>(n->mem);
-  fmap.insert(std::make_pair(beg,n));
+//  G4PoolLink *beg=reinterpret_cast<G4PoolLink*>(n->mem);
+//  fmap.insert(std::make_pair(beg,n));
   G4PoolLink *end=reinterpret_cast<G4PoolLink*>(n->mem+csize);
   fmap.insert(std::make_pair(end,n));
-  const int nelem = csize/esize;
+ const int nelem = csize/esize;
   char* start = n->mem;
   char* last = &start[(nelem-1)*esize];
   for (char* p=start; p<last; p+=esize)
@@ -151,28 +155,21 @@ void G4AllocatorPool::Grow()
 }
 
 G4AllocatorPool::G4PoolChunk * G4AllocatorPool::GetChunk(G4PoolLink*p){
-  std::map<G4PoolLink*,G4PoolChunk*>::iterator ite=fmap.upper_bound(p);
-  std::map<G4PoolLink*,G4PoolChunk*>::iterator itb=fmap.lower_bound(p);
-   
-  if(ite!=fmap.end() && itb!=fmap.end() && ite->second==itb->second)return ite->second;
-
+std::map<G4PoolLink*,G4PoolChunk*>::iterator itb=fmap.lower_bound(p);
+if(itb!=fmap.end())return itb->second;
 
 /*
-  int k=0;
-  for(G4PoolChunk*n=chunks;k++<nchunks;n=n->next){
-     G4PoolLink *beg=reinterpret_cast<G4PoolLink*>(n->mem);
-     G4PoolLink *end=reinterpret_cast<G4PoolLink*>(n->mem+csize);
-     if(p>=beg && p<end){
-       return n; 
-  }
-  }
+ *  This is a bit  paranoidal , and slower, but safe
+  std::map<G4PoolLink*,G4PoolChunk*>::iterator ite=fmap.upper_bound(p); 
+  std::map<G4PoolLink*,G4PoolChunk*>::iterator itb=fmap.lower_bound(p);
+  if(ite!=fmap.end() && itb!=fmap.end() && ite->second==itb->second)return ite->second;
 */
-  std::cerr<<" G4AllocatorPool::GetChunk-S-NoPoolChunk "<<p<<" "<<" "<<nchunks<<std::endl ;
+std::cerr<<" G4AllocatorPool::GetChunk-S-NoPoolChunk "<<p<<" "<<" "<<nchunks<<std::endl ;
 
 return 0;
 }
 unsigned long long G4AllocatorPool::CollectGarbage(){
-if(!Threshold || GetNoPages()<2)return 0;
+if(GarbageCollectionOff() || GetNoPages()<2)return 0;
 G4PoolLink *prev=0;
 unsigned int el=0;
 for(G4PoolLink *p=head;p;p=p->next){

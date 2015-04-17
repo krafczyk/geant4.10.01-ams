@@ -49,7 +49,7 @@
 #include <map>
 class G4AllocatorPool
 {
-  private:
+  public:
   static   long long gThreshold;  // Garbage Collection Threshold
   public:
    static unsigned long long  GetThreshold(){return gThreshold>0?gThreshold:-gThreshold;}

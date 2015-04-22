@@ -105,7 +105,7 @@ public:
       // Make pool larger
       //   
       //
-     G4PoolChunk * GetChunk( G4PoolLink *p);
+     inline G4PoolChunk * GetChunk( G4PoolLink *p);
      unsigned long long CollectGarbage(); 
   private:
 
@@ -116,12 +116,29 @@ public:
     int nchunks;
     int free;
     std::map<G4PoolLink*,G4PoolChunk*> fmap;
+    std::map<G4PoolLink*,G4PoolChunk*>::iterator ith;
     
 };
 
 // ------------------------------------------------------------
 // Inline implementation
 // ------------------------------------------------------------
+
+#include <iostream>
+inline G4AllocatorPool::G4PoolChunk * G4AllocatorPool::GetChunk(G4PoolLink*p){
+if(ith!=fmap.end() && ith->first>p && (const char*)(((const char*)(ith->first))-csize)<(const char*)p){
+return ith->second;
+}
+ith=fmap.lower_bound(p);
+if(ith!=fmap.end()){
+return ith->second;
+}
+std::cerr<<" G4AllocatorPool::GetChunk-S-NoPoolChunk "<<p<<" "<<" "<<nchunks<<std::endl ;
+
+return 0;
+}
+
+
 
 // ************************************************************
 // Alloc
@@ -143,7 +160,6 @@ G4AllocatorPool::Alloc()
 // Free
 // ************************************************************
 //
-#include <iostream>
 inline void G4AllocatorPool::Free( void* b )
 {
   G4PoolLink* p = static_cast<G4PoolLink*>(b);

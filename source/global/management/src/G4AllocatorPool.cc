@@ -34,6 +34,7 @@
 //
 // Author: G.Cosmo, November 2000
 //
+#include  "globals.hh"
 #include <iostream>
 #include <vector>
 #include "G4AllocatorPool.hh"
@@ -59,6 +60,7 @@ if(sz*ml>ms)csize=sz*ml-16;
 else {
 int nl=ms/sz/8;
 csize=sz*nl*8-16;
+ith=fmap.end();
 }
 }
 
@@ -123,6 +125,7 @@ void G4AllocatorPool::Reset(unsigned long long size)
   nchunks = 0;
   free=0; 
    fmap.clear();
+   ith=fmap.end();
 }
 
 // ************************************************************
@@ -154,20 +157,24 @@ void G4AllocatorPool::Grow()
   head = reinterpret_cast<G4PoolLink*>(start);
 }
 
-G4AllocatorPool::G4PoolChunk * G4AllocatorPool::GetChunk(G4PoolLink*p){
-std::map<G4PoolLink*,G4PoolChunk*>::iterator itb=fmap.lower_bound(p);
-if(itb!=fmap.end())return itb->second;
-
 /*
- *  This is a bit  paranoidal , and slower, but safe
-  std::map<G4PoolLink*,G4PoolChunk*>::iterator ite=fmap.upper_bound(p); 
-  std::map<G4PoolLink*,G4PoolChunk*>::iterator itb=fmap.lower_bound(p);
-  if(ite!=fmap.end() && itb!=fmap.end() && ite->second==itb->second)return ite->second;
-*/
+ G4AllocatorPool::G4PoolChunk * G4AllocatorPool::GetChunk(G4PoolLink*p){
+static unsigned lon long hit=0;
+#pragma omp threadprivate(hit)
+if(ith!=fmap.end() && ith->first>p && (const char*)(((const char*)(ith->first))-csize)<(const char*)p){
+return ith->second;
+if(hit++%1000==1)std::cout<<" G4AllocatorPool-I-hit "<<hit<<std::endl;
+}
+ith=fmap.lower_bound(p);
+if(ith!=fmap.end()){
+return ith->second;
+}
 std::cerr<<" G4AllocatorPool::GetChunk-S-NoPoolChunk "<<p<<" "<<" "<<nchunks<<std::endl ;
 
 return 0;
 }
+*/
+
 unsigned long long G4AllocatorPool::CollectGarbage(){
 if(GarbageCollectionOff() || GetNoPages()<2)return 0;
 G4PoolLink *prev=0;

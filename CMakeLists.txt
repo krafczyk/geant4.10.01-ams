@@ -157,15 +157,6 @@ if(GEANT4_BUILD_EXAMPLES)
   add_subdirectory(examples)
 endif()
 
-# - Install example code to datarootdir
-install(DIRECTORY examples
-  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/Geant4-${Geant4_VERSION}
-  COMPONENT Examples
-  PATTERN "CVS" EXCLUDE
-  PATTERN ".svn" EXCLUDE
-  )
-
-
 #-----------------------------------------------------------------------------
 # Provide packaging with CPack.
 include(Geant4CPackBase)

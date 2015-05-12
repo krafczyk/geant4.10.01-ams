@@ -80,7 +80,7 @@ static const int MarkerLen = 64; // Enough room to hold a begin or end marker.
 namespace detail {
 
 template< std::size_t n,
-          bool = n < std::size_t(std::numeric_limits<unsigned long>::digits) >
+          bool = (n < std::size_t(std::numeric_limits<unsigned long>::digits)) >
   struct do_right_shift;
 template< std::size_t n >
   struct do_right_shift<n,true>

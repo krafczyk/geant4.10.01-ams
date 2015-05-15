@@ -14,6 +14,12 @@ code and to keep track of all tags.
      ---------------------------------------------------------------
      * Please list in reverse chronological order (last date on top)
      ---------------------------------------------------------------
+
+22-Apr-2015 A. Ribon
+- G4FTFParticipants : added a new method to clean up the member vector.
+- G4FTFModel : using the above new method to release the memory allocated
+               in GetStrings().
+
 27-Nov-2014 V. Uzhinsky    (hadr-string-diff-V10-00-15)
 - Charge non-conservation is erased for meson-nucleus interactions
   in G4Diffractive Excitation. It was caused by quark exchange.

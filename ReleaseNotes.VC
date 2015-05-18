@@ -51,3 +51,5 @@ G4PAIModel.{hh,cc}: Fix initialization for G4 10 MT mode.
 G4NavigationHistoryPool  :  reinstated after bug fix by G. Cosmo
 G4IonINCLXXPhysics.cc  change xsection to GG
 G4IonINCLXXPhysics.hh   private->public
+G4WorkerRunManager.cc   GarbageCollection
+geometry/navigation/src/G4MultiLevelLocator.cc  Change Fatal to  EventMustBeAborted

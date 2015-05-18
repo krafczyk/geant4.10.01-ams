@@ -730,7 +730,7 @@ G4bool G4MultiLevelLocator::EstimateIntersectionPoint(
     G4cout.precision( oldprc ); 
 
     G4Exception("G4MultiLevelLocator::EstimateIntersectionPoint()",
-                "GeomNav0003", FatalException, message);
+                "GeomNav0003", EventMustBeAborted, message);
   }
   else if( substep_no >= warn_substeps )
   {  

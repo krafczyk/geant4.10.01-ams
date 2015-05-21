@@ -268,7 +268,7 @@ G4double G4WentzelVIModel::ComputeTruePathLengthLimit(
   preKinEnergy = dp->GetKineticEnergy();
   effKinEnergy = preKinEnergy;
   DefineMaterial(track.GetMaterialCutsCouple());
-  lambdaeff = GetTransportMeanFreePath(particle,preKinEnergy);
+  lambdaeff = GetTransportMeanFreePath(particle,preKinEnergy)*bias;
   currentRange = GetRange(particle,preKinEnergy,currentCouple);
   cosTetMaxNuc = wokvi->SetupKinematic(preKinEnergy, currentMaterial);
   
@@ -378,7 +378,7 @@ G4double G4WentzelVIModel::ComputeGeomPathLength(G4double truelength)
       }
       effKinEnergy = 0.5*(e1 + preKinEnergy);
       cosTetMaxNuc = wokvi->SetupKinematic(effKinEnergy, currentMaterial);
-      lambdaeff = GetTransportMeanFreePath(particle, effKinEnergy);
+      lambdaeff = GetTransportMeanFreePath(particle, effKinEnergy)*bias;
       //G4cout << " tLength= "<< tPathLength<< " Leff= " << lambdaeff << G4endl;
       zPathLength = lambdaeff;
       if(tPathLength*numlimit < lambdaeff) {
@@ -433,7 +433,7 @@ G4double G4WentzelVIModel::ComputeTrueStepLength(G4double geomStepLength)
 	  }
 	  effKinEnergy = 0.5*(e1 + preKinEnergy);
 	  cosTetMaxNuc = wokvi->SetupKinematic(effKinEnergy, currentMaterial);
-	  lambdaeff = GetTransportMeanFreePath(particle, effKinEnergy);
+	  lambdaeff = GetTransportMeanFreePath(particle, effKinEnergy)*bias;
 	  G4double tau = geomStepLength/lambdaeff;
 
 	  if(tau < 0.999999) { tPathLength = -lambdaeff*G4Log(1.0 - tau); } 
@@ -463,8 +463,8 @@ G4double G4WentzelVIModel::ComputeTrueStepLength(G4double geomStepLength)
 	cosThetaMin = 1.0;
       } else if(xtsec > 0.0) {
 	
-	lambdaeff = 1./cross; 
-	G4double tau = zPathLength*cross;
+	lambdaeff = bias/cross; 
+	G4double tau = zPathLength/lambdaeff;
 	if(tau < numlimit) { 
 	  tPathLength = zPathLength*(1.0 + 0.5*tau + tau*tau/3.0); 
 	} else if(tau < 0.999999) { 

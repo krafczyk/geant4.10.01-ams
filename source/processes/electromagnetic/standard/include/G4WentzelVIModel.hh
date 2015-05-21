@@ -133,7 +133,8 @@ private:
   //  hide assignment operator
   G4WentzelVIModel & operator=(const  G4WentzelVIModel &right);
   G4WentzelVIModel(const  G4WentzelVIModel&);
-
+public:
+G4double bias;
 protected:
 
   G4WentzelOKandVIxSection* wokvi;

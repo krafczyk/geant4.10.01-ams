@@ -159,7 +159,7 @@ G4bool G4MultiLevelLocator::EstimateIntersectionPoint(
   G4int depth=0; // Depth counts how many subdivisions of initial step made
 
 #ifdef G4DEBUG_FIELD
-  static const G4double tolerance = 1.0e-8 * mm; 
+  static const G4double tolerance = 1.0e-8 * CLHEP::mm; 
   G4ThreeVector  StartPosition= CurveStartPointVelocity.GetPosition(); 
   if( (TrialPoint - StartPosition).mag() < tolerance) 
   {

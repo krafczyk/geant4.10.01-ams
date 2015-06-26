@@ -46,7 +46,7 @@
 //     |--> patch number
 
 #ifndef G4VERSION_NUMBER
-#define G4VERSION_NUMBER  1011
+#define G4VERSION_NUMBER  1012
 #endif
 
 #ifndef G4VERSION_TAG
@@ -62,6 +62,6 @@ static const G4String G4Version = "$Name$";
 #else
 static const G4String G4Version = "$Name$";
 #endif
-static const G4String G4Date    = "(27-March-2015)";
+static const G4String G4Date    = "(19-June-2015)";
 
 #endif

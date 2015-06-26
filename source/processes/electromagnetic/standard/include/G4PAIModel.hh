@@ -112,7 +112,7 @@ public:
 
   inline G4PAIModelData* GetPAIModelData();
 
-  inline std::vector<const G4MaterialCutsCouple*> GetMaterialCutsCoupleVector() const;
+  inline const std::vector<const G4MaterialCutsCouple*>& GetVectorOfCouples();
 
   inline G4double ComputeMaxEnergy(G4double scaledEnergy);
 
@@ -148,8 +148,6 @@ private:
   G4double fMass;
   G4double fRatio;
   G4double fChargeSquare;
-
-  G4bool   isInitialised;
 };
 
 inline G4PAIModelData* G4PAIModel::GetPAIModelData()
@@ -157,7 +155,8 @@ inline G4PAIModelData* G4PAIModel::GetPAIModelData()
   return fModelData;
 }
 
-inline std::vector<const G4MaterialCutsCouple*> G4PAIModel::GetMaterialCutsCoupleVector() const
+inline const std::vector<const G4MaterialCutsCouple*>& 
+G4PAIModel::GetVectorOfCouples()
 {
   return fMaterialCutsCoupleVector;
 }

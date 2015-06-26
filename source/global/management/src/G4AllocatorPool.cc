@@ -54,7 +54,7 @@ G4AllocatorPool::G4AllocatorPool( unsigned int sz )
       
     chunks(0), head(0), nchunks(0),free(0)
 {
-const int ms=128000;
+const int ms=256000;
 const int ml=10;
 if(sz*ml>ms)csize=sz*ml-16;
 else {

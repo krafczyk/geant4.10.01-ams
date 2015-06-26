@@ -82,6 +82,7 @@ G4FTFParticipants::~G4FTFParticipants() {}
 
 void G4FTFParticipants::GetList( const G4ReactionProduct& thePrimary, 
                                  G4FTFParameters* theParameters ) { 
+      const int mtry=10000;
 
   #ifdef debugFTFparticipant
   G4cout << "Participants::GetList" << G4endl 
@@ -110,6 +111,7 @@ void G4FTFParticipants::GetList( const G4ReactionProduct& thePrimary,
 
     G4double xyradius;                          
     xyradius = theNucleus->GetOuterRadius() + deltaxy; // Range of impact parameter sampling
+    int itry=0; 
                                                   
     do {  // while ( theInteractions.size() == 0 )
 
@@ -132,9 +134,7 @@ void G4FTFParticipants::GetList( const G4ReactionProduct& thePrimary,
       #ifdef debugFTFparticipant
       G4int TrN( 0 );
       #endif
-
-      while ( ( nucleon = theNucleus->GetNextNucleon() ) )  {
-
+     while ( ( nucleon = theNucleus->GetNextNucleon() ) )  {
         G4double impact2 = sqr( impactX - nucleon->GetPosition().x() ) +
                            sqr( impactY - nucleon->GetPosition().y() );
 
@@ -170,8 +170,10 @@ void G4FTFParticipants::GetList( const G4ReactionProduct& thePrimary,
 
       } 
 
-    } while ( theInteractions.size() == 0 );
-
+    } while ( theInteractions.size() == 0 && itry++<mtry);
+    if(itry>mtry){
+    G4cerr<<" G4FTFParticipants::GetList-E-While0Loop "<<G4endl;
+    }
     #ifdef debugFTFparticipant
     G4cout << "Number of Hit nucleons " << theInteractions.size() << "\t Bx " << impactX/fermi
            << "\t By " << impactY/fermi << "\t B " 
@@ -195,6 +197,7 @@ void G4FTFParticipants::GetList( const G4ReactionProduct& thePrimary,
              theNucleus->GetOuterRadius() + deltaxy;
 
   G4double impactX( 0.0 ), impactY( 0.0 );
+  int itry=0; 
 
   do {  // while ( theInteractions.size() == 0 )
 
@@ -297,7 +300,10 @@ void G4FTFParticipants::GetList( const G4ReactionProduct& thePrimary,
 
     if ( theInteractions.size() != 0 ) theProjectileNucleus->DoTranslation( theBeamPosition );
 
-  } while ( theInteractions.size() == 0 );
+    } while ( theInteractions.size() == 0 && itry++<mtry);
+    if(itry>mtry){
+    G4cerr<<" G4FTFParticipants::GetList-E-While1Loop "<<G4endl;
+    }
 
   SortInteractionsIncT();
   ShiftInteractionTime();

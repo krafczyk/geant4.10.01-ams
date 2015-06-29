@@ -93,11 +93,11 @@ public:
     {
       public:
         explicit G4PoolChunk(unsigned int sz)
-          : size(sz), mem(new char[size]), next(0),used(0) {;}
+          : size(sz), mem(new char[size]), used(0), next(0) {;}
         ~G4PoolChunk() { delete [] mem; }
         const unsigned int size;
         char* mem;
-        int used; 
+        int used;
         G4PoolChunk* next;
     };
 
@@ -169,7 +169,8 @@ inline void G4AllocatorPool::Free( void* b )
   G4PoolChunk *n=GetChunk(p);
   if(n && --(n->used)==0)free++;
   if(AutoGarbageCollectionOn() && free>nchunks/2+1 && Size()>GetThreshold() ){  
-   unsigned long long coll=CollectGarbage();
+    CollectGarbage();
+   // unsigned long long coll=CollectGarbage();
    //unsigned int mess=0;
    //const unsigned int gmess=1000;
    //if(mess++<gmess)std::cout<<" G4AllocatorPool::Free-I-GarbageCollected "<<coll<<" From "<<size<<" To "<<Size()<<std::endl;
